@@ -1,5 +1,16 @@
 .bd-navbar {
-    padding: .1rem 0;
+    /* padding: .1rem 0; */
+    padding: 0;
     background-color: transparent;
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15),inset 0 -1px 0 rgba(255,255,255,0.15);
+}
+
+/* .banner-sm-canvas {
+    margin-left: calc((100% - 1224px) / 2);
+    margin-right: calc((100% - 1224px) / 2);
+} */
+
+.banner-sm-canvas {
+    margin-left: calc((100% - 576px) / 2);
+    margin-right: calc((100% - 576px) / 2);
 }
