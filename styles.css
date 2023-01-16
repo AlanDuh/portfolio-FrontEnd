@@ -14,3 +14,7 @@
     margin-left: calc((100% - 576px) / 2);
     margin-right: calc((100% - 576px) / 2);
 }
+
+h1,h2,h3,h4,h5,h6 {
+    color: #555;
+}
