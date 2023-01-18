@@ -6,17 +6,19 @@
     <!-- Bootstrap CSS -->
     <link href="dist/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/d7b100e300.js" crossorigin="anonymous"></script>
     <title>Portfolio de Alan Duhalde</title>
 </head>
 <body>
     <header class="navbar navbar-expand-lg p-0 shadow fixed-top" style="background-color: #ddd559;">
         <nav class="container-xxl">
-            <button class="navbar-toggler d-lg-none p-0" style="border:none;box-shadow:none;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+            <button class="navbar-toggler d-lg-none p-0" style="border:none;box-shadow:none;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar1" aria-controls="offcanvasNavbar1">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="offcanvas offcanvas-start d-lg-none" style="width: 250px;" tabindex="1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas offcanvas-start d-lg-none" style="width: 250px;" tabindex="1" id="offcanvasNavbar1" aria-labelledby="offcanvasNavbarLabel1">
                 <div class="offcanvas-header">
-                <a class="offcanvas-title" id="offcanvasNavbarLabel" href="#">
+                <a class="offcanvas-title" id="offcanvasNavbarLabel1" href="#">
                     <img src="imgs/APLogo.png" alt="Argentina Programa" title="Argentina Programa" height="40" width="112" style="filter: invert(75%)">
                 </a>
                 <button type="button" style="border:none;box-shadow:none;" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -64,20 +66,20 @@
                     <a class="nav-link" href="#">Proyectos</a>
                 </li>
             </ul>
-            <span class="navbar-text ms-auto d-none d-sm-block">
-                Contacto:
-            </span>
-            <ul class="navbar-nav flex-row d-none d-sm-flex">
+            <ul class="navbar-nav flex-row d-none d-sm-flex ms-auto">
                 <li class="nav-item">
                     <a class="nav-link px-2" href="#" title="Twitter">
-                        <img src="imgs/Twitter-icon.png" alt="tw" height="16" width="16">
-                        Twitter
+                        <i class="fa-brands fa-twitter"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="#" title="GitHub">
+                        <i class="fa-brands fa-github"></i>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link px-2" href="#" title="Mail">
-                        <img src="imgs/correo-icon.png" alt="tw" height="16" width="16">
-                        Mail
+                        <i class="fa-solid fa-envelope"></i>
                     </a>
                 </li>
                 <li class="nav-item py-2">
@@ -85,31 +87,50 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link px-2" data-bs-toggle="modal" data-bs-target="#LogIn-modal" href="#" title="LogIn">
-                        <img src="imgs/LogIn-icon.png" alt="log" height="16" width="16">
-                        LogIn
+                        <i class="fa-solid fa-right-to-bracket"></i>
                     </a>
                 </li>
             </ul>
-            <ul class="navbar-nav flex-row d-sm-none">
-                <li class="nav-item">
-                    <a class="nav-link px-2" href="#" title="Twitter">
-                        <img src="imgs/Twitter-icon.png" alt="tw" height="16" width="16">
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link px-2" href="#" title="Mail">
-                        <img src="imgs/correo-icon.png" alt="tw" height="16" width="16">
-                    </a>
-                </li>
-                <li class="nav-item py-2">
-                    <div class="vr d-flex h-100 mx-2"></div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link px-2" data-bs-toggle="modal" data-bs-target="#LogIn-modal" href="#" title="LogIn">
-                        <img src="imgs/LogIn-icon.png" alt="log" height="16" width="16">
-                    </a>
-                </li>
-            </ul>
+            <button class="navbar-toggler d-sm-none p-0" style="border:none;box-shadow:none;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2" aria-controls="offcanvasNavbar2">
+                <i class="fa-solid fa-house"></i>
+            </button>
+            <div class="offcanvas offcanvas-end d-sm-none" style="width: 250px;" tabindex="-1" id="offcanvasNavbar2" aria-labelledby="offcanvasNavbarLabel2">
+                <div class="offcanvas-header">
+                <h2 class="offcanvas-title" id="offcanvasNavbarLabel2">
+                    Alan Duhalde
+                </h2>
+                <button type="button" style="border:none;box-shadow:none;" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body pt-0">
+                    <ul class="navbar-nav flex-row flex-wrap">
+                        <li class="nav-item col-6">
+                            <a class="nav-link" href="#" title="Twitter">
+                                <i class="fa-brands fa-twitter pe-2"></i>
+                                Twitter
+                            </a>
+                        </li>
+                        <li class="nav-item col-6">
+                            <a class="nav-link" href="#" title="GitHub">
+                                <i class="fa-brands fa-github pe-2"></i>
+                                GitHub
+                            </a>
+                        </li>
+                        <li class="nav-item col-6">
+                            <a class="nav-link" href="#" title="Mail">
+                                <i class="fa-solid fa-envelope pe-2"></i>
+                                Mail
+                            </a>
+                        </li>
+                        <hr class="col-12">
+                        <li class="nav-item col-6">
+                            <a class="nav-link" data-bs-toggle="modal" data-bs-target="#LogIn-modal" href="#" title="LogIn">
+                                <i class="fa-solid fa-right-to-bracket pe-2"></i>
+                                LogIn
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </nav>
     </header>
     <main class="container-xxl mt-sm-5">
@@ -294,17 +315,17 @@
                             <div class="row">
                                 <div class="col-12 col-md-6 text-start">
                                     <p class="m-0" style="color: #555;">
-                                        <i class="text-success">Tik</i> Funciones básicas<br>
-                                        <i class="text-success">Tik</i> Programación Orientada a Objetos<br>
-                                        <i class="text-success">Tik</i> Tipado estático (Ts)<br>
-                                        <i class="text-success">Tik</i> Uso de elemento Canvas<br>
-                                        <i class="text-success">Tik</i> Manejo básico de Elementos del DOM<br>
+                                        <i class="fa-solid fa-check text-success"></i> Funciones básicas<br>
+                                        <i class="fa-solid fa-check text-success"></i> Programación Orientada a Objetos<br>
+                                        <i class="fa-solid fa-check text-success"></i> Tipado estático (Ts)<br>
+                                        <i class="fa-solid fa-check text-success"></i> Uso de elemento Canvas<br>
+                                        <i class="fa-solid fa-check text-success"></i> Manejo básico de Elementos del DOM<br>
                                     </p>
                                 </div>
                                 <div class="col-12 col-md-6 text-end">
                                     <p class="m-0 mt-3 mt-md-0" style="color: #555;">
-                                        Peticiones <i class="text-danger">Cross</i><br>
-                                        Conexiones a Internet, servidores, etc <i class="text-danger">Cross</i><br>
+                                        Peticiones <i class="fa-solid fa-xmark text-danger"></i><br>
+                                        Conexiones a Internet, servidores, etc <i class="fa-solid fa-xmark text-danger"></i><br>
                                     </p>
                                 </div>
                             </div>
@@ -326,16 +347,16 @@
                             <div class="row">
                                 <div class="col-12 col-md-6 text-start">
                                     <p class="m-0" style="color: #555;">
-                                        <i class="text-success">Tik</i> Diseño estático<br>
-                                        <i class="text-success">Tik</i> Uso básico de CSS<br>
-                                        <i class="text-success">Tik</i> Uso básico de Bootstrap<br>
-                                        <i class="text-success">Tik</i> Diseños responsivos<br>
+                                        <i class="fa-solid fa-check text-success"></i> Diseño estático<br>
+                                        <i class="fa-solid fa-check text-success"></i> Uso básico de CSS<br>
+                                        <i class="fa-solid fa-check text-success"></i> Uso básico de Bootstrap<br>
+                                        <i class="fa-solid fa-check text-success"></i> Diseños responsivos<br>
                                     </p>
                                 </div>
                                 <div class="col-12 col-md-6 text-end">
                                     <p class="m-0 mt-3 mt-md-0" style="color: #555;">
-                                        SEO <i class="text-danger">Cross</i><br>
-                                        Poco acostumbrado al uso de librerias y/o frameworks <i class="text-danger">Cross</i><br>
+                                        SEO <i class="fa-solid fa-xmark text-danger"></i><br>
+                                        Poco acostumbrado al uso de librerias y/o frameworks <i class="fa-solid fa-xmark text-danger"></i><br>
                                     </p>
                                 </div>
                             </div>
@@ -539,9 +560,9 @@
                                         <div class="w-100">
                                             <p class="mb-2" style="color: #555; font-size: .85em;">Fecha de la última versión: <span class="text-muted">18 / 01 / 2023</span></p>
                                         </div>
-                                        <a href="/" class="btn btn-primary disabled p-0 px-2 mx-2" title="YA ESTAS AQUI :D">Ir a la página</a>
-                                        <a href="https://github.com/AlanDuh/portfolio-FrontEnd" title="GitHub" class="btn btn-outline-dark p-0 d-flex align-items-center justify-content-evenly" style="height: 27px; width: 27px;">
-                                            <img src="imgs/GitHub-logo.png" class="h-75 v-75" alt="GitHub">
+                                        <a href="/" class="btn btn-primary disabled p-0 px-2 mx-2">Ir a la página</a>
+                                        <a href="https://github.com/AlanDuh/portfolio-FrontEnd" title="GitHub" class="btn btn-outline-dark p-0 px-1">
+                                            <i class="fa-brands fa-github"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -553,11 +574,7 @@
         </section>
     </main>
 
-    <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Launch demo modal
-    </button> -->
-    
-    <!-- <div class="modal fade" id="LogIn-modal" tabindex="-1" aria-labelledby="LogIn-modal-label" aria-hidden="true">
+    <div class="modal fade" id="LogIn-modal" tabindex="-1" aria-labelledby="LogIn-modal-label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header justify-content-between align-items-center">
@@ -582,7 +599,7 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
     
     <!-- <div class="modal fade" id="LogIn-modal" tabindex="-1" aria-labelledby="LogIn-modal-label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -752,7 +769,7 @@
                         </div>
                         <label class="form-label" for="sub-skills"><i>Sub-skills</i>:</label>
                         <div>
-                            <div class="mb-2 row g-2" id="sub-skills" style="font-size: .74em;">
+                            <div class="p-2 row g-2 rounded bg-light" id="sub-skills" style="font-size: .74em;">
                                 <div class="col-sm-4">
                                     <label for="sub-skill-name1" class="mb-1 form-label">Nombre de <i>sub-skill</i>:</label>
                                     <input class="form-control form-control-sm" id="sub-skill-name1" type="text">
@@ -763,14 +780,14 @@
                                         <span class="input-group-text p-0 px-2">
                                             75%
                                         </span>
-                                        <div class="d-flex align-items-center p-0 px-2 input-group-item border" style="flex-grow: 1;">
+                                        <div class="d-flex align-items-center p-0 px-2 input-group-item border bg-white" style="flex-grow: 1;">
                                             <input type="range" class="form-range" min="0" max="100" id="sub-skill-percent1">
                                         </div>
-                                        <button class="btn btn-outline-secondary p-0 px-2" type="button" id="button-addon1">X</button>     
+                                        <button class="btn border p-0 px-2 text-muted bg-white" type="button" id="button-addon1"><i class="fa-solid fa-xmark" title="Eliminar Sub-skill"></i></button>     
                                     </div>
                                 </div>
                             </div>
-                            <div class="text-end"><button class="btn" style="background-color: #ddd559; font-size: .75em;">Agregar sub-skill</button></div>
+                            <div class="text-end mt-2"><button class="btn" style="background-color: #ddd559; font-size: .75em;">Agregar sub-skill</button></div>
                         </div>
                     </form>
                 </div>
@@ -782,7 +799,7 @@
         </div>
     </div> -->
 
-    <div class="modal fade" id="LogIn-modal" tabindex="-1" aria-labelledby="LogIn-modal-label" aria-hidden="true">
+    <!-- <div class="modal fade" id="LogIn-modal" tabindex="-1" aria-labelledby="LogIn-modal-label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header justify-content-between align-items-center">
@@ -801,11 +818,16 @@
                             <div class="py-3 px-2 d-flex flex-row flex-nowrap" style="height: calc(50px + 2rem); width: fit-content;">
                                 <div style="height: 50px; width: 50px;" class="position-relative border mx-2">
                                     <img src="imgs/APLogo.png" class="w-100 h-100" style="object-fit: cover;">
-                                    <span class="btn p-0 position-absolute top-0 end-0" style="height: fit-content; width: fit-content; font-size: 1rem;">X</span>
+                                    <i class="fa-solid fa-xmark btn p-0 position-absolute top-0 end-0" title="Eliminar"></i>
                                 </div>
                             </div>
                         </div>
-                        <input class="form-control form-control-sm mb-3" type="file" aria-label="insertar imagen de proyecto">
+                        <div class="input-group input-group-sm mb-1">
+                            <div class="input-group-text">
+                                <button class="btn p-0" style="font-size: .75em;" title="Añadir" aria-label="agregar imagen seleccionada"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                            <input class="form-control" type="file" aria-label="insertar imagen del proyecto">
+                        </div>
                         <div class="mb-3">
                             <label class="form-label" for="project-description">Descripción:</label>
                             <textarea class="form-control" style="font-size: .85em;" id="project-description" rows="3" placeholder="Una breve descripción del proyecto..."></textarea>                            
@@ -845,8 +867,65 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
   
+    <!-- <div class="modal fade" id="LogIn-modal" tabindex="-1" aria-labelledby="LogIn-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header justify-content-between align-items-center">
+                    <div style="width: 1em; height: 1em;" class="m-2"></div>
+                    <h1 class="modal-title fs-5 text-center" id="LogIn-modal-label">Editar Información</h1>
+                    <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-muted">
+                    <form style="font-size: .75em;">
+                        <div class="mb-3">
+                            <label class="form-label" for="owner-title">Titulo:</label>
+                            <input class="form-control form-control-sm" type="text" id="owner-title">
+                        </div>
+                        <label class="form-label" for="owner-banner">Imagenes del banner:</label>
+                        <div class="mb-1 overflow-auto border rounded">
+                            <div class="py-3 px-2 d-flex flex-row flex-nowrap" style="height: calc(50px + 2rem); width: fit-content;">
+                                <div style="height: 50px; width: 50px;" class="position-relative border mx-2">
+                                    <img src="imgs/APLogo.png" class="w-100 h-100" style="object-fit: cover;">
+                                    <i class="fa-solid fa-xmark btn p-0 position-absolute top-0 end-0" title="Eliminar"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3" id="owner-banner">
+                            <div class="input-group input-group-sm mb-1">
+                                <div class="input-group-text">
+                                    <button class="btn p-0" style="font-size: .75em;" title="Añadir"><i class="fa-solid fa-plus"></i></button>
+                                </div>
+                                <input class="form-control" type="file" aria-label="insertar archivo">
+                            </div>
+                            <div class="input-group input-group-sm mb-1">
+                                <div class="input-group-text">
+                                    <button class="btn p-0" style="font-size: .75em;" title="Añadir"><i class="fa-solid fa-plus"></i></button>
+                                </div>
+                                <input class="form-control form-control-sm" type="text" aria-label="insertar enlace" placeholder="Enlace de una imagen (.png o .jpg)">
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-text">
+                                    <button class="btn p-0" style="font-size: .75em;" title="Añadir"><i class="fa-solid fa-plus"></i></button>
+                                </div>
+                                <input class="form-control form-control-sm" type="text" aria-label="insertar enlace" aria-describedby="script-help" placeholder="Enlace de un script">
+                            </div>
+                            <div class="form-text" id="script-help">El script debe ser un objeto, con una función <i>this.draw()</i> que dibuje en un canvas 1320 x 760 y, en caso de ser animación, incluir una función <i>this.continue()</i> para pasar al siguiente frame. Ver ejemplo <a href="/">aquí</a></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="owner-description">Descripción:</label>
+                            <textarea class="form-control" style="font-size: .85em;" id="owner-description" rows="3"></textarea>                            
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
       
     <!-- <script src="script.js"></script> -->
     <!-- Bootstrap JS -->
