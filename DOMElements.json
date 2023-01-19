@@ -1,0 +1,178 @@
+{
+    "ownerInfo":{
+        "banner":[],
+        "photo":null,
+        "title":"Full Stack Developer Jr",
+        "description":"Mi nombre es Alan Duhalde, programador en formación, instruído bajo la tutoría ofrecida por el 'Argentina Programa', aún sin especialización, pero con capacidades de diseñar y programar FrontEnd, de manera como aquí se contempla."
+    },
+
+    "education":[
+        {
+            "concept":"Estudios Secundarios",
+            "institutionImage":{
+                "type":"file",
+                "src":"icts.png"
+            },
+            "title":"Titulo secundario de Bachiller en Economía y Administración",
+            "institution":"Instituto Cultural Tristán Suarez",
+            "date":{
+                "type":"completion only",
+                "start":null,
+                "end":"10-12-2021"
+            },
+            "general":null
+        },
+        {
+            "concept":"Certificado de Programador",
+            "institutionImage":{
+                "type":"file",
+                "src":"APLogo.png"
+            },
+            "title":"Full Stack Developer Jr",
+            "institution":"Instituto Nacional de Tecnología Industrial (INTI)",
+            "date":{
+                "type":"in progress",
+                "start":"12-11-2022",
+                "end":null
+            },
+            "general":"La segunda etapa de <i>'Argentina Programa'</i> se encuentra en curso desde noviembre de 2022"
+        }
+    ],
+
+    "experiences":[],
+
+    "skills":{
+        "hard":[
+            {
+                "name":"FrontEnd - JavaScript y TypeScript",
+                "value":"75",
+                "points":{
+                    "positives":[
+                    "Funciones básicas",
+                    "Programación Orientada a Objetos",
+                    "Tipado estático (Ts)",
+                    "Uso de elemento Canvas",
+                    "Manejo básico de Elementos del DOM"
+                    ],
+                    "negatives":[
+                        "Peticiones",
+                        "Conexiones a Internet, servidores, etc"
+                    ]
+                },
+                "background":{
+                    "type":"image",
+                    "animation":"false",
+                    "src":"APLogo.png"
+                }
+            },
+            {
+                "name":"FrontEnd - HTML, CSS y Bootstrap",
+                "value":"75",
+                "points":{
+                    "positives":[
+                        "Diseño estático",
+                        "Uso básico de CSS",
+                        "Uso básico de Bootstrap",
+                        "Diseños responsivos"
+                    ],
+                    "negatives":[
+                        "SEO",
+                        "Poco acostumbrado al uso de librerias y/o frameworks"
+                    ]
+                },
+                "background":{
+                    "type":"image",
+                    "animation":"false",
+                    "src":"APLogo.png"
+                }
+
+            }
+        ],
+        "soft":[
+            {
+                "name":"Eficacia y eficiencia",
+                "description":"Cuando me pongo a pensar y planear el cómo de la realización de un proyecto (con el suficiente tiempo) puedo plantear soluciones por lo general satisfactorias y mínimamente estéticas. A su vez, durante la ejecución, suelo pensar constantemente, y en ocaciones me surgen ideas que pueden transformarse en mejores soluciones o complicaciones generando dudas y pérdidas de tiempo, más aún cuando las necesidades del proyecto implican la adaptación a un nuevo lenguaje o framework.",
+                "subSkills":[
+                    {
+                        "name":"Creatividad",
+                        "value":75
+                    },
+                    {
+                        "name":"Capacidad",
+                        "value":65
+                    },
+                    {
+                        "name":"Concentración",
+                        "value":55
+                    },
+                    {
+                        "name":"Velocidad",
+                        "value":65
+                    },
+                    {
+                        "name":"Adaptación",
+                        "value":70
+                    }
+                ]
+            },
+            {
+                "name":"Trabajo en Equipo",
+                "description":"En la mayoría de las ocaciónes me hé mostrado más comodo con el trabajo individual, pero en los contextos de necesidad de integrar un equipo he demostrado ser capaz de adaptarme, comunicarme, plantear ideas e iniciativas, y hasta liderar (si mis conocimientos son afines al tema a desarrollar).",
+                "subSkills":[
+                    {
+                        "name":"Predisposición",
+                        "value":50
+                    },
+                    {
+                        "name":"Integración",
+                        "value":70
+                    },
+                    {
+                        "name":"Comunicación",
+                        "value":75
+                    },
+                    {
+                        "name":"Liderazgo",
+                        "value":65
+                    }
+                ]
+            },
+            {
+                "name":"Inglés (idioma)",
+                "description":"Puedo leer, interpretar y escribir, pero carezco de la capacidad de entender las palabras de alguien que no hable lento y pausado, y cuento con una pronunciación básica.",
+                "subSkills":[
+                    {
+                        "name":"Escritura",
+                        "value":50
+                    },
+                    {
+                        "name":"Lectura",
+                        "value":65
+                    },
+                    {
+                        "name":"Comunicación Oral",
+                        "value":20
+                    }
+                ]
+            }
+        ]
+    },
+
+    "projects":[
+        {
+            "name":"Portfolio",
+            "description":"Este portfolio",
+            "date":"19-01-2023",
+            "images":[
+                {
+                    "type":"file",
+                    "src":"portdolio.png"
+                },
+                {
+                    "type":"file",
+                    "src":"portdolio2.png"
+                }
+            ]
+        }
+    ]
+}
