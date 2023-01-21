@@ -133,73 +133,96 @@
             </div>
         </nav>
     </header>
-    <main class="container-xxl mt-sm-5">
+    <main class="container-xxl mt-sm-5 position-relative">
         <div class="row">
             <section class="col container-fluid">
                 <div class="row">
                     <div class="d-none d-sm-block col mx-4 overflow-hidden position-relative border-1 rounded shadow-sm ratio ratio-21x9">
-                        <canvas class="d-block banner-canvas" width="1224" height="525"></canvas>
+                        <div class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner banner">
+                            </div>
+                        </div>
+                        <!-- <canvas class="d-block banner-canvas" width="1224" height="525"></canvas> -->
                         <div class="d-none d-lg-flex flex-column justify-content-evenly position-absolute top-0 start-0 h-100 bg-dark bg-opacity-10 container-fluid text-center" style="width: 33%;">
                             <div class="row h-auto">
-                                <div class="mx-auto rounded-circle p-0 border border-white w-50 ratio ratio-1x1"></div>
+                                <div class="mx-auto rounded-circle p-0 border border-white w-50 ratio ratio-1x1 overflow-hidden photoContainer"></div>
                             </div>
                             <div class="row">
                                 <h1 class="m-auto fs-5 fw-bold">
                                     Alan Duhalde<br>
-                                    <span style="color: #aaa;">Full Stack Developer Jr</span>
+                                    <span style="color: #aaa;" class="titleContainer">Full Stack Developer Jr</span>
                                 </h1>
                             </div>
                             <div class="row">
                                 <p style="color: #777;">
-                                    <i>
+                                    <i class="descriptionContainer">
                                         Mi nombre es Alan Duhalde, programador en formación, instruído bajo la tutoría ofrecida por el 'Argentina Programa', aún sin especialización, pero con capacidades de diseñar y programar FrontEnd, de manera como aquí se contempla.
                                     </i>
                                 </p>
+                            </div>
+                            <div class="position-absolute top-0 start-100">
+                                <button type="button" class="btn text-warning edit-owner" title="Editar" data-bs-toggle="modal" data-bs-target="#owner-edit-modal">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
                             </div>
                         </div>
                         <div class="d-none d-sm-flex flex-column justify-content-evenly d-lg-none position-absolute top-0 start-0 h-100 w-50 bg-dark bg-opacity-10 container-fluid text-center">
                             <div class="row h-auto py-3 align-items-center justify-content-evenly">
                                 <div class="col-4">
-                                    <div class="rounded-circle p-0 border border-white w-100 ratio ratio-1x1"></div>
+                                    <div class="rounded-circle p-0 border border-white w-100 ratio ratio-1x1 overflow-hidden photoContainer"></div>
                                 </div>
                                 <h1 class="col m-auto fs-5 fw-bold">
                                     Alan Duhalde<br>
-                                    <span style="color: #aaa;">Full Stack Developer Jr</span>
+                                    <span style="color: #aaa;" class="titleContainer">Full Stack Developer Jr</span>
                                 </h1>
                             </div>
                             <div class="row">
                                 <p style="font-size: .8em; color: #777;">
-                                    <i>
+                                    <i class="descriptionContainer">
                                         Mi nombre es Alan Duhalde, programador en formación, instruído bajo la tutoría ofrecida por el 'Argentina Programa', aún sin especialización, pero con capacidades de diseñar y programar FrontEnd, de manera como aquí se contempla.
                                     </i>
                                 </p>
+                            </div>
+                            <div class="position-absolute top-0 start-100">
+                                <button type="button" class="btn text-warning edit-owner" title="Editar" data-bs-toggle="modal" data-bs-target="#owner-edit-modal">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
 
                     
-                    <div class="p-0 pt-5 d-sm-none col overflow-hidden border-1 rounded-bottom shadow-sm">
-                        <div class="container-fluid">
-                            <div class="col">
-                                <canvas class="d-block banner-sm-canvas" height="900" width="576"></canvas>
+                    <div class="p-0 d-sm-none col overflow-hidden border-1 rounded-bottom shadow-sm">
+                        <div class="container-fluid px-0">
+                            <div class="carousel slide" data-bs-ride="carousel" style="height: 100vh;">
+                                <div class="carousel-inner banner w-100 h-100">
+                                </div>
                             </div>
+                            <!-- <div class="col">
+                                <canvas class="d-block banner-sm-canvas" height="900" width="576"></canvas>
+                            </div> -->
                         </div>
-                        <div class="d-flex flex-column justify-content-evenly bg-dark bg-opacity-10 container-fluid text-center" style="height: 600px;">
+                        <div class="d-flex flex-column justify-content-evenly bg-dark bg-opacity-10 container-fluid text-center position-relative" style="height: 600px;">
                             <div class="row">
-                                <div class="mx-auto rounded-circle p-0 border border-white w-50 ratio ratio-1x1" style="max-width: 300px;"></div>
+                                <div class="mx-auto rounded-circle p-0 border border-white w-50 ratio ratio-1x1 overflow-hidden photoContainer" style="max-width: 300px;"></div>
                             </div>
                             <div class="row">
                                 <h1 class="mx-auto fs-5 fw-bold">
                                     Alan Duhalde<br>
-                                    <span style="color: #aaa;">Full Stack Developer Jr</span>
+                                    <span style="color: #aaa;" class="titleContainer">Full Stack Developer Jr</span>
                                 </h1>
                             </div>
                             <div class="row" style="color: #777;">
                                 <p>
-                                    <i>
+                                    <i class="descriptionContainer">
                                         Mi nombre es Alan Duhalde, programador en formación, instruído bajo la tutoría ofrecida por el 'Argentina Programa', aún sin especialización, pero con capacidades de diseñar y programar FrontEnd, de manera como aquí se contempla.
                                     </i>
                                 </p>
+                            </div>
+                            <div class="position-absolute top-0 end-0">
+                                <button type="button" class="btn text-warning edit-owner" title="Editar" data-bs-toggle="modal" data-bs-target="#owner-edit-modal">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -215,14 +238,33 @@
                         </div>
                     </div>
                     <div class="row row-cols-1">
-                        <div class="col card my-2 shadow-sm bg-dark-subtle overflow-hidden" style="height: 300px;">
-                            <div class="row h-100">
-                                <div class="card-img">
-                                    <div class="h-100 d-none d-sm-flex align-items-center flex-row-reverse">
-                                        <img class="opacity-25 ratio ratio-1x1" src="imgs/diploma.png" style="width: 250px;">
-                                    </div>
+                        <div class="col card my-2 p-0 shadow-sm bg-dark-subtle overflow-hidden" style="min-height: 300px; max-height: fit-content;">
+                            <div class="card-header bg-white position-relative" style="z-index: 1;">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn text-warning" title="Mover arriba">
+                                        <i class="fa-solid fa-circle-chevron-up"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning" title="Mover abajo">
+                                        <i class="fa-solid fa-circle-chevron-down"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning d-none d-sm-block" title="Arrastrar">
+                                        <i class="fa-solid fa-up-down-left-right"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning" title="Editar">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button type="button" class="btn text-danger" title="Eliminar">
+                                        <i class="fa-solid fa-circle-xmark"></i>
+                                    </button>
                                 </div>
-                                <div class="col card-body text-start d-flex flex-column justify-content-evenly card-img-overlay h-100 py-0">
+                            </div>
+                            <div class="card-img h-100 w-100 p-4 position-absolute">
+                                <div class="h-100 w-auto d-none d-sm-flex align-items-center flex-row-reverse">
+                                    <img class="opacity-25 ratio ratio-1x1 w-auto h-100" src="imgs/diploma.png">
+                                </div>
+                            </div>
+                            <div class="row h-100">
+                                <div class="col card-body text-start d-flex flex-column justify-content-evenly h-100 py-0 px-4">
                                     <div class="container-fluid d-flex justify-content-between align-items-center p-0">
                                         <div style="width: 80px; height: 40px;">
                                             <img src="imgs/icts.png" class="h-100 w-100" style="object-fit: contain;">
@@ -238,14 +280,33 @@
                             </div>
                         </div>
 
-                        <div class="col card my-2 shadow-sm bg-dark-subtle overflow-hidden" style="height: 300px;">
-                            <div class="row h-100">
-                                <div class="card-img">
-                                    <div class="h-100 d-none d-sm-flex align-items-center flex-row-reverse">
-                                        <img class="opacity-25 ratio ratio-1x1" src="imgs/papel.png" style="width: 250px;">
-                                    </div>
+                        <div class="col card my-2 p-0 shadow-sm bg-dark-subtle overflow-hidden" style="min-height: 300px; max-height: fit-content;">
+                            <div class="card-header bg-white position-relative" style="z-index: 1;">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn text-warning" title="Mover arriba">
+                                        <i class="fa-solid fa-circle-chevron-up"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning" title="Mover abajo">
+                                        <i class="fa-solid fa-circle-chevron-down"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning d-none d-sm-block" title="Arrastrar">
+                                        <i class="fa-solid fa-up-down-left-right"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning" title="Editar">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button type="button" class="btn text-danger" title="Eliminar">
+                                        <i class="fa-solid fa-circle-xmark"></i>
+                                    </button>
                                 </div>
-                                <div class="col card-body text-start d-flex flex-column justify-content-evenly card-img-overlay h-100 py-0">
+                            </div>
+                            <div class="card-img h-100 w-100 p-4 position-absolute">
+                                <div class="h-100 w-auto d-none d-sm-flex align-items-center flex-row-reverse">
+                                    <img class="opacity-25 ratio ratio-1x1 w-auto h-100" src="imgs/papel.png">
+                                </div>
+                            </div>
+                            <div class="row h-100">
+                                <div class="col card-body text-start d-flex flex-column justify-content-evenly h-100 py-0 px-4">
                                     <div class="container-fluid d-flex justify-content-between align-items-center p-0">
                                         <div style="width: 80px; height: 40px;">
                                             <img src="imgs/APLogo.png" class="h-100 w-100" style="object-fit: contain; filter: invert(75%);">
@@ -329,6 +390,23 @@
                                     </p>
                                 </div>
                             </div>
+                            <div class="position-absolute top-50 start-50 translate-middle d-flex bg-secondary bg-opacity-50 rounded">
+                                <button type="button" class="btn text-warning" title="Mover arriba">
+                                    <i class="fa-solid fa-circle-chevron-up"></i>
+                                </button>
+                                <button type="button" class="btn text-warning" title="Mover abajo">
+                                    <i class="fa-solid fa-circle-chevron-down"></i>
+                                </button>
+                                <button type="button" class="btn text-warning d-none d-sm-block" title="Arrastrar">
+                                    <i class="fa-solid fa-up-down-left-right"></i>
+                                </button>
+                                <button type="button" class="btn text-warning" title="Editar">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button type="button" class="btn text-danger" title="Eliminar">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>                                          
                 </div>
@@ -369,8 +447,27 @@
                 <div class="row row-cols-1 row-cols-md-2 g-4">
 
                     <div class="col px-sm-4" style="padding-left: 0.75rem; padding-right: 0.75rem;">
-                        <div class="card h-100 border-0">
-                            <ul class="list-group shadow-sm d-flex flex-column h-100">
+                        <div class="card h-100">
+                            <div class="card-header bg-white py-0">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn text-warning" title="Mover arriba">
+                                        <i class="fa-solid fa-circle-chevron-up"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning" title="Mover abajo">
+                                        <i class="fa-solid fa-circle-chevron-down"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning d-none d-sm-block" title="Arrastrar">
+                                        <i class="fa-solid fa-up-down-left-right"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning" title="Editar">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button type="button" class="btn text-danger" title="Eliminar">
+                                        <i class="fa-solid fa-circle-xmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <ul class="list-group list-group-flush shadow-sm d-flex flex-column h-100">
                                 <li class="list-group-item d-flex align-items-center" style="flex-grow: 0;">
                                     <h3 class="d-inline-block fs-5 me-3">Eficacia y eficiencia</h3>
                                     <div class="progress" style="flex-grow: 1;">
@@ -542,12 +639,31 @@
                 <div class="row row-cols-1 row-cols-md-2 justify-content-evenly g-4">
                     <div class="col p-sm-4">
                         <div class="card h-100 shadow-sm overflow-hidden">
+                            <div class="card-header bg-white position-relative py-0" style="z-index: 1;">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn text-warning" title="Mover arriba">
+                                        <i class="fa-solid fa-circle-chevron-up"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning" title="Mover abajo">
+                                        <i class="fa-solid fa-circle-chevron-down"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning d-none d-sm-block" title="Arrastrar">
+                                        <i class="fa-solid fa-up-down-left-right"></i>
+                                    </button>
+                                    <button type="button" class="btn text-warning" title="Editar">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button type="button" class="btn text-danger" title="Eliminar">
+                                        <i class="fa-solid fa-circle-xmark"></i>
+                                    </button>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col col-12 d-sm-none d-md-block d-lg-none shadow-sm" style="height: 100px;">
-                                    <img src="imgs/porfolio2.png" class="h-100 w-100" style="object-fit: cover;" alt="Portfolio-miniature">
+                                    <img src="imgs/porfolio2.png" class="h-100 w-100" style="object-fit: cover;" alt="Portfolio-thumbnail">
                                 </div>
                                 <div class="col col-4 d-none d-sm-block d-md-none d-lg-block shadow-sm" style="height: 200px;">
-                                    <img src="imgs/porfolio.png" class="h-100 w-100" style="object-fit: cover;" alt="Portfolio-miniature">
+                                    <img src="imgs/porfolio.png" class="h-100 w-100" style="object-fit: cover;" alt="Portfolio-thumbnail">
                                 </div>
                                 <div class="col col-12 col-sm-8 col-md-12 col-lg-8 text-center text-sm-start text-md-center text-lg-start d-flex flex-column py-2 justify-content-between">
                                     <div>
@@ -865,12 +981,12 @@
         </div>
     </div> -->
   
-    <!-- <div class="modal fade" id="LogIn-modal" tabindex="-1" aria-labelledby="LogIn-modal-label" aria-hidden="true">
+    <div class="modal fade" id="owner-edit-modal" tabindex="-1" aria-labelledby="owner-edit-label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header justify-content-between align-items-center">
                     <div style="width: 1em; height: 1em;" class="m-2"></div>
-                    <h1 class="modal-title fs-5 text-center" id="LogIn-modal-label">Editar Información</h1>
+                    <h1 class="modal-title fs-5 text-center" id="owner-edit-label">Editar Información</h1>
                     <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-muted">
@@ -879,35 +995,41 @@
                             <label class="form-label" for="owner-title">Titulo:</label>
                             <input class="form-control form-control-sm" type="text" id="owner-title">
                         </div>
+                        <div class="mb-3" id="owner-photo">
+                        <label class="form-label" for="owner-photo">Foto de perfil:</label>
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-text position-relative">
+                                    <label class="form-label m-0" for="owner-photo-file">Inserte Archivo</label>
+                                    <input class="form-control form-control-sm position-absolute opacity-0 start-0 top-0" type="file" id="owner-photo-file" accept="image/png, image/jpeg">
+                                </div>
+                                <input class="form-control form-control-sm" type="text" aria-label="insertar enlace de un archivo .png o .jpg" id="owner-photo-link" placeholder="Enlace de una imagen (.png o .jpg)">
+                            </div>
+                        </div>
                         <label class="form-label" for="owner-banner">Imagenes del banner:</label>
                         <div class="mb-1 overflow-auto border rounded">
-                            <div class="py-3 px-2 d-flex flex-row flex-nowrap" style="height: calc(50px + 2rem); width: fit-content;">
-                                <div style="height: 50px; width: 50px;" class="position-relative border mx-2">
-                                    <img src="imgs/APLogo.png" class="w-100 h-100" style="object-fit: cover;">
-                                    <i class="fa-solid fa-xmark btn p-0 position-absolute top-0 end-0" title="Eliminar"></i>
-                                </div>
+                            <div class="py-3 px-2 d-flex flex-row flex-nowrap" id="owner-thumbnails" style="height: calc(50px + 2rem); width: fit-content;">
                             </div>
                         </div>
                         <div class="mb-3" id="owner-banner">
                             <div class="input-group input-group-sm mb-1">
                                 <div class="input-group-text">
-                                    <button class="btn p-0" style="font-size: .75em;" title="Añadir"><i class="fa-solid fa-plus"></i></button>
+                                    <div class="btn p-0 banner-adder" fileType="file" bindedInput="owner-fileInput" style="font-size: .75em;" title="Añadir"><i class="fa-solid fa-plus"></i></div>
                                 </div>
-                                <input class="form-control" type="file" aria-label="insertar archivo">
+                                <input class="form-control" type="file" aria-label="insertar archivo" id="owner-fileInput" accept="image/png, image/jpeg">
                             </div>
-                            <div class="input-group input-group-sm mb-1">
+                            <div class="input-group input-group-sm mb">
                                 <div class="input-group-text">
-                                    <button class="btn p-0" style="font-size: .75em;" title="Añadir"><i class="fa-solid fa-plus"></i></button>
+                                    <div class="btn p-0 banner-adder" fileType="link" bindedInput="owner-linkInput" style="font-size: .75em;" title="Añadir"><i class="fa-solid fa-plus"></i></div>
                                 </div>
-                                <input class="form-control form-control-sm" type="text" aria-label="insertar enlace" placeholder="Enlace de una imagen (.png o .jpg)">
+                                <input class="form-control form-control-sm" type="text" aria-label="insertar enlace" id="owner-linkInput" placeholder="Enlace de una imagen (.png o .jpg)">
                             </div>
-                            <div class="input-group input-group-sm">
+                            <!-- <div class="input-group input-group-sm">
                                 <div class="input-group-text">
-                                    <button class="btn p-0" style="font-size: .75em;" title="Añadir"><i class="fa-solid fa-plus"></i></button>
+                                    <div class="btn p-0 banner-adder" fileType="canvas" bindedInput="owner-canvasInput" style="font-size: .75em;" title="Añadir"><i class="fa-solid fa-plus"></i></div>
                                 </div>
-                                <input class="form-control form-control-sm" type="text" aria-label="insertar enlace" aria-describedby="script-help" placeholder="Enlace de un script">
+                                <input class="form-control form-control-sm" type="text" aria-label="insertar enlace" id="owner-canvasInput" aria-describedby="script-help" placeholder="Enlace de un script">
                             </div>
-                            <div class="form-text" id="script-help">El script debe ser un objeto, con una función <i>this.draw()</i> que dibuje en un canvas 1320 x 760 y, en caso de ser animación, incluir una función <i>this.continue()</i> para pasar al siguiente frame. Ver ejemplo <a href="/">aquí</a></div>
+                            <div class="form-text" id="script-help">El script debe ser un objeto, con una función <i>this.draw()</i> que dibuje en un canvas 1320 x 760 y, en caso de ser animación, incluir una función <i>this.continue()</i> para pasar al siguiente frame. Ver ejemplo <a href="/">aquí</a></div> -->
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="owner-description">Descripción:</label>
@@ -916,14 +1038,14 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="owner-saver" class="btn btn-primary" data-bs-dismiss="modal">Guardar</button>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
       
-    <!-- <script src="script.js"></script> -->
+    <script src="objects-scripts.js"></script>
     <!-- Bootstrap JS -->
     <script src="dist/bootstrap/js/bootstrap.js"></script>
     <script src="dist/bootstrap/js/bootstrap.esm.js"></script>
