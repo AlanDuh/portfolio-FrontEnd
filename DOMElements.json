@@ -9,10 +9,7 @@
     "education":[
         {
             "concept":"Estudios Secundarios",
-            "institutionImage":{
-                "type":"file",
-                "src":"icts.png"
-            },
+            "institutionImage":"icts.png",
             "title":"Titulo secundario de Bachiller en Economía y Administración",
             "institution":"Instituto Cultural Tristán Suarez",
             "date":{
@@ -24,10 +21,7 @@
         },
         {
             "concept":"Certificado de Programador",
-            "institutionImage":{
-                "type":"file",
-                "src":"APLogo.png"
-            },
+            "institutionImage":"APLogo.png",
             "title":"Full Stack Developer Jr",
             "institution":"Instituto Nacional de Tecnología Industrial (INTI)",
             "date":{
@@ -45,7 +39,7 @@
         "hard":[
             {
                 "name":"FrontEnd - JavaScript y TypeScript",
-                "value":"75",
+                "value":75,
                 "points":{
                     "positives":[
                     "Funciones básicas",
@@ -61,13 +55,13 @@
                 },
                 "background":{
                     "type":"image",
-                    "animation":"false",
+                    "animation":false,
                     "src":"APLogo.png"
                 }
             },
             {
                 "name":"FrontEnd - HTML, CSS y Bootstrap",
-                "value":"75",
+                "value":75,
                 "points":{
                     "positives":[
                         "Diseño estático",
@@ -82,7 +76,7 @@
                 },
                 "background":{
                     "type":"image",
-                    "animation":"false",
+                    "animation":false,
                     "src":"APLogo.png"
                 }
 

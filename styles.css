@@ -24,3 +24,7 @@ h1,h2,h3,h4,h5,h6 {
 .accordion-button::after {
     margin: auto;
 }
+
+.nav-item {
+    cursor: pointer;
+}

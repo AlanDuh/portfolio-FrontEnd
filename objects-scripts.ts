@@ -1,3 +1,31 @@
+let sessionButtons:HTMLElement[] = [];
+const adminAccount:{name:string,pass:string} = {
+    name: 'A D',
+    pass: '12345'
+}
+const logInButton:HTMLButtonElement = document.getElementById('logIn-button') as HTMLButtonElement;
+const logInModalButtons:any = document.querySelectorAll('.logIn-modalButton');
+const logOutButtons:any = document.querySelectorAll('.logOut-button');
+logInButton.addEventListener('click',()=>logIn());
+logOutButtons.forEach((button:HTMLElement)=>{
+    button.addEventListener('click',()=>logOut());
+    sessionButtons.push(button);
+});
+
+function logIn()
+{
+    if ((document.getElementById('logIn-name') as HTMLInputElement).value === adminAccount.name && (document.getElementById('logIn-password') as HTMLInputElement).value === adminAccount.pass) {
+        logInModalButtons.forEach((button:HTMLElement)=>button.classList.add('d-none'));
+        sessionButtons.forEach(element=>element.classList.remove('d-none'));
+        $('#LogIn-modal').modal('hide');
+    }
+}
+function logOut()
+{
+    logInModalButtons.forEach((button:HTMLElement)=>button.classList.remove('d-none'));
+    sessionButtons.forEach(element=>element.classList.add('d-none'));
+}
+
 class OwnerInfo
 {
     private banner:CarouselImage[];
@@ -13,6 +41,8 @@ class OwnerInfo
     private titleContainer:any = document.querySelectorAll('.titleContainer');
     private descriptionContainer:any = document.querySelectorAll('.descriptionContainer');
     private bannerEditer:any = document.querySelectorAll('.banner-adder');
+    private bannerEditerLink:any = document.getElementById('owner-banner-link');
+    private bannerEditerFile:any = document.getElementById('owner-banner-file');
     private photoEditerFile:any = document.getElementById('owner-photo-file');
     private photoEditerLink:any = document.getElementById('owner-photo-link');
     private titleEditer:any = document.getElementById('owner-title');
@@ -27,14 +57,14 @@ class OwnerInfo
         this.photo = jsonObj.photo;
         this.title = jsonObj.title;
         this.description = jsonObj.description;
+        this.bannerEditerFile.addEventListener('input',()=>{
+            this.bannerEditerLink.value = URL.createObjectURL(this.bannerEditerFile.files[0]);
+        });
         this.bannerEditer.forEach((button:HTMLElement)=>{
             button.addEventListener('click',()=>{
                 let input:any = document.getElementById(button.getAttribute('bindedInput') as string);
                 let src:string|null;
-                switch (button.getAttribute('filetype')) {
-                    case 'file':
-                        src = URL.createObjectURL(input.files[0]);
-                        break;
+                switch (button.getAttribute('fileType')) {
                     case 'link':
                         src = input.value;
                         break;
@@ -46,7 +76,7 @@ class OwnerInfo
                         break;
                 }
                 if (input.value) {
-                    this.bannerDraft.push(new CarouselImage(button.getAttribute('filetype') as string, src, this.bannerDraft.length, this));
+                    this.bannerDraft.push(new CarouselImage(button.getAttribute('fileType') as string, src, this.bannerDraft.length, this));
                 }
                 this.refreshTC();
             })
@@ -72,6 +102,7 @@ class OwnerInfo
                 this.openEditor();
             })
         });
+        this.open.forEach((button:HTMLElement)=>sessionButtons.push(button));
         this.refresh();
     }
 
@@ -150,6 +181,7 @@ class OwnerInfo
         this.photoDraft = this.photo;
         this.titleDraft = this.title;
         this.descriptionDraft = this.description;
+        this.refreshTC();
     }
 
     public complementMovement(from:CarouselImage,dir:string):void
@@ -171,11 +203,6 @@ class OwnerInfo
     {
         this.bannerDraft = newDraft;
     }
-}
-
-class Project
-{
-
 }
 
 class CarouselImage
@@ -237,6 +264,9 @@ class CarouselImage
     private deleteSelf():void
     {
         this.container.BannerDraft = this.container.BannerDraft.filter(banner => banner != this);
+        for (let i in this.container.BannerDraft) {
+            this.container.BannerDraft[i].Index = parseInt(i);
+        }
         this.container.refreshTC();
     }
 
@@ -291,3 +321,5 @@ const info = new OwnerInfo({
     title:"Full Stack Developer Jr",
     description:"Mi nombre es Alan Duhalde, programador en formación, instruído bajo la tutoría ofrecida por el 'Argentina Programa', aún sin especialización, pero con capacidades de diseñar y programar FrontEnd, de manera como aquí se contempla."
 });
+
+// ----------------------------------------------------------------------
