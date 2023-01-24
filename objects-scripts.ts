@@ -1,29 +1,65 @@
 let sessionButtons:HTMLElement[] = [];
+let allPlaces:HTMLElement[] = [];
 const adminAccount:{name:string,pass:string} = {
     name: 'A D',
     pass: '12345'
 }
+let inSession:boolean = false;
 const logInButton:HTMLButtonElement = document.getElementById('logIn-button') as HTMLButtonElement;
 const logInModalButtons:any = document.querySelectorAll('.logIn-modalButton');
 const logOutButtons:any = document.querySelectorAll('.logOut-button');
+const logInCancel:HTMLElement = document.getElementById('LogIn-cancel') as HTMLElement;
 logInButton.addEventListener('click',()=>logIn());
 logOutButtons.forEach((button:HTMLElement)=>{
     button.addEventListener('click',()=>logOut());
     sessionButtons.push(button);
 });
+logInCancel.addEventListener('click',()=>hideAlert());
 
 function logIn()
 {
     if ((document.getElementById('logIn-name') as HTMLInputElement).value === adminAccount.name && (document.getElementById('logIn-password') as HTMLInputElement).value === adminAccount.pass) {
         logInModalButtons.forEach((button:HTMLElement)=>button.classList.add('d-none'));
         sessionButtons.forEach(element=>element.classList.remove('d-none'));
+        inSession = true;
+        allPlaces.forEach(place=>place.setAttribute('draggable','true'));
         $('#LogIn-modal').modal('hide');
-    }
+        $('#offcanvasNavbar2').offcanvas('hide');
+        showAlert('success','Inicio de sesión exitoso');
+    } else showAlert('danger','Usuario y/o contraseña inválidos');
 }
 function logOut()
 {
     logInModalButtons.forEach((button:HTMLElement)=>button.classList.remove('d-none'));
     sessionButtons.forEach(element=>element.classList.add('d-none'));
+    inSession = false;
+    allPlaces.forEach(place=>place.setAttribute('draggable','false'));
+    showAlert('warning','Se ha cerrado la sesión');
+}
+
+function createElement(type:string,classes:string[]|undefined,attributes:{att:string,value:string}[]|undefined,parent:HTMLElement|undefined,children:HTMLElement[]|undefined):HTMLElement|HTMLImageElement
+{
+    let newElement:HTMLElement|HTMLImageElement = document.createElement(type);
+    if (classes) newElement.classList.add(...classes);
+    if (attributes) attributes.forEach(attribute=>newElement.setAttribute(attribute.att,attribute.value));
+    if (parent) parent.appendChild(newElement);
+    if (children) children.forEach(child=>newElement.appendChild(child));
+    return newElement;
+}
+
+const body:HTMLElement = document.querySelector('body') as HTMLElement;
+
+function showAlert(type:string,message:string):void
+{
+    hideAlert();
+    let alertContent:HTMLElement = document.createElement('DIV');
+    alertContent.innerHTML = message;
+    let alertButton:HTMLElement = createElement('BUTTON',['btn-close'],[{att:'type',value:'button'},{att:'data-bs-dismiss',value:'alert'},{att:'aria-label',value:'cerrar alerta'}],undefined,undefined);
+    body.appendChild(createElement('DIV',['alert', `alert-${type}`, 'alert-dismissible','fixed-top','my-3','start-50'],[{att:'role',value:'alert'},{att:'style',value:'max-width: 540px; z-index: 1100; top: 2em; transform: translate(-50%, 0);'}],undefined,[alertContent,alertButton]));
+}
+function hideAlert():void
+{
+    $('.alert').alert('close');
 }
 
 class OwnerInfo
@@ -315,11 +351,679 @@ class CarouselImage
     }
 }
 
-const info = new OwnerInfo({
-    banner:[],
-    photo: null,
-    title:"Full Stack Developer Jr",
-    description:"Mi nombre es Alan Duhalde, programador en formación, instruído bajo la tutoría ofrecida por el 'Argentina Programa', aún sin especialización, pero con capacidades de diseñar y programar FrontEnd, de manera como aquí se contempla."
-});
 
 // ----------------------------------------------------------------------
+
+
+class CardsContainer
+{
+    private possibleId:number = 0;
+    private element:HTMLElement;
+    private places:HTMLElement[] = [];
+    private cards:Card[] = [];
+    private containerType:string;
+    private cardEditing:ExpEduc;
+    private required:{simple:HTMLInputElement[],composed:{troggler:HTMLInputElement,cases:{ifVlue:string,required:HTMLInputElement[]}[]}[]|undefined};
+    private saveButton:HTMLElement;
+    private cancelButtons:NodeList;
+    private addButton:HTMLElement;
+    private isVoid:boolean = false;
+    private isAdding:boolean = false;
+    private hasFailed:boolean = false;
+    private allInputs:HTMLElement[] = [];
+    public constructor(element:HTMLElement,type:string,initialCards:{}[])
+    {
+        this.element = element;
+        this.containerType = type;
+        if (initialCards.length == 0) this.createVoidHolder();
+        initialCards.forEach(card=>{this.addCard(card,type)});
+        this.setEditConfig();
+        this.saveButton.addEventListener('click',()=>{
+            if (this.cardEditing) {
+                this.save();
+            } else if (this.isAdding) {
+                if (this.verify()) {
+                    this.isAdding = false;
+                    this.addCard(this.createCard(),this.containerType);
+                    this.cancel();
+                    $('#ExpEduc-modal').modal('hide');
+                } else {
+                    this.hasFailed = true;
+                    showAlert('danger','Rellene todas las entradas requeridas');
+                }
+            }
+        });
+        this.addButton.addEventListener('click',()=>{
+            this.isAdding = true;
+            this.replaceValues(true);
+        });
+        sessionButtons.push(this.addButton);
+        this.cancelButtons.forEach(button=>button.addEventListener('click',()=>{this.cancel()}));
+    }
+
+    public createVoidHolder():void
+    {
+        this.addPlace();
+        let text:HTMLElement = createElement('H6',['position-absolute', 'd-flex', 'w-100', 'h-100', 'top-0', 'start-0', 'justify-content-center', 'fw-bold', 'align-items-center'],undefined,this.places[0],undefined);
+        text.innerText = 'No hay nada aquí';
+        this.isVoid = true;
+    }
+
+    private deleteVoidHolder():void
+    {
+        this.element.removeChild(this.places[0]);
+        this.places = [];
+        this.isVoid = false;
+    }
+
+    private cancel():void
+    {
+        if (this.hasFailed) {
+            this.hasFailed = false;
+            hideAlert();
+        }
+        this.allInputs.forEach(input=>input.classList.remove('bg-danger','bg-success'));
+        this.cardEditing = null;
+        this.isAdding = false;
+    }
+    private save:any;
+    public replaceValues:any;
+    private createCard:any;
+    private setEditConfig():void
+    {
+        if (this.containerType == 'education' || this.containerType == 'experiences') {
+            const concept:HTMLInputElement = document.getElementById('ExpEduc-concept') as HTMLInputElement;
+            const institutionImageFile:HTMLInputElement = document.getElementById('ExpEduc-institutionImg-file') as HTMLInputElement;
+            const institutionImageLink:HTMLInputElement = document.getElementById('ExpEduc-institutionImg-link') as HTMLInputElement;
+            institutionImageFile.addEventListener('input',()=>{institutionImageLink.value = URL.createObjectURL((institutionImageFile.files as any)[0])});
+            const title:HTMLInputElement = document.getElementById('ExpEduc-title') as HTMLInputElement;
+            const institution:HTMLInputElement = document.getElementById('ExpEduc-institution') as HTMLInputElement;
+            const state:HTMLInputElement = document.getElementById('ExpEduc-state') as HTMLInputElement;
+            const start:HTMLInputElement = document.getElementById('ExpEduc-start-date') as HTMLInputElement;
+            const finish:HTMLInputElement = document.getElementById('ExpEduc-finish-date') as HTMLInputElement;
+            const general:HTMLInputElement = document.getElementById('ExpEduc-general') as HTMLInputElement;
+            this.allInputs = [concept,institutionImageFile,institutionImageLink,title,institution,state,start,finish,general];
+            this.replaceValues = (toVoid:Boolean) => {
+                concept.value = (toVoid)?'':this.cardEditing.Concept;
+                institutionImageLink.value = (toVoid)?'':this.cardEditing.InstitutionImage;
+                title.value = (toVoid)?'':this.cardEditing.Title;
+                institution.value = (toVoid)?'':this.cardEditing.Institution;
+                state.value = (toVoid)?'':this.cardEditing.Date.type;
+                start.value = (toVoid)?'':this.cardEditing.Date.start as string;
+                finish.value = (toVoid)?'':this.cardEditing.Date.end as string;
+                general.value = (toVoid)?'':this.cardEditing.General as string;
+            }
+            this.save = () => {
+                if (this.verify()) {
+                    this.cardEditing.Concept = concept.value;
+                    this.cardEditing.InstitutionImage = institutionImageLink.value;
+                    this.cardEditing.Title = title.value;
+                    this.cardEditing.Institution = institution.value;
+                    this.cardEditing.Date.type = state.value;
+                    this.cardEditing.Date.start = start.value;
+                    this.cardEditing.Date.end = finish.value;
+                    this.cardEditing.General = general.value;
+                    $('#ExpEduc-modal').modal('hide');
+                    this.cardEditing.refreshContent();
+                    this.cancel();
+                } else {
+                    this.hasFailed = true;
+                    showAlert('danger','Rellene todas las entradas requeridas');
+                }
+            };
+            this.required = {
+                simple: [concept,title,institution,state],
+                composed: [{
+                    troggler: state,
+                    cases: [
+                        {
+                            ifVlue: 'in progress',
+                            required: [start]
+                        },
+                        {
+                            ifVlue: 'completion only',
+                            required: [finish]
+                        },
+                        {
+                            ifVlue: 'finished',
+                            required: [start,finish]
+                        }
+                    ]
+                }]
+            };
+            this.createCard = () => {
+                return {
+                    concept:concept.value,
+                    institutionImage:institutionImageLink.value,
+                    title:title.value,
+                    institution:institution.value,
+                    date:{
+                        type:state.value,
+                        start:start.value,
+                        end:finish.value
+                    },
+                    general:general.value
+                }
+            }
+            this.saveButton = document.getElementById('ExpEduc-edition-save') as HTMLElement;
+            this.cancelButtons = document.querySelectorAll('.ExpEduc-edition-cancel');
+            if (this.containerType == 'education') this.addButton = document.getElementById('add-card-education') as HTMLElement;
+            else if (this.containerType == 'experiences') this.addButton = document.getElementById('add-card-experience') as HTMLElement;
+        }
+    }
+
+    private verify():boolean
+    {
+        let response:boolean = true;
+        let valid:HTMLElement[] = [];
+        let invalid:HTMLElement[] = [];
+        this.required.simple.forEach(requirement=>{
+            if (!requirement.value) {
+                response = false;
+                invalid.push(requirement);
+            } else valid.push(requirement);
+        });
+        this.required.composed?.forEach(requirement=>{
+            let reqs = requirement.cases.find(case_ => case_.ifVlue == requirement.troggler.value);
+            reqs?.required.forEach(required=>{
+                if (!required.value) {
+                    response = false;
+                    invalid.push(required);
+                } else valid.push(required);
+            })
+        })
+        this.allInputs.forEach(input=>input.classList.remove('bg-danger','bg-success'));
+        if (!response) {
+            valid.forEach(input=>{input.classList.add('bg-opacity-25','bg-success')});
+            invalid.forEach(input=>{input.classList.add('bg-opacity-25','bg-danger')});
+        }
+        return response;
+    }
+
+    private addPlace()
+    {
+        let newPlace = document.createElement('DIV');
+        newPlace.id = this.places.length.toString();
+        switch (this.containerType) {
+            case 'education':
+                newPlace.classList.add('col', 'card', 'my-2', 'p-0', 'shadow-sm', 'bg-dark-subtle', 'overflow-hidden', 'position-relative');
+                newPlace.style.minHeight = '300px';
+                newPlace.style.maxHeight = 'fit-content';
+                break;
+            case 'experiences':
+                newPlace.classList.add('col', 'card', 'my-2', 'p-0', 'shadow-sm', 'bg-dark-subtle', 'overflow-hidden', 'position-relative');
+                newPlace.style.minHeight = '300px';
+                newPlace.style.maxHeight = 'fit-content';
+                break;
+            case 'HSkill':
+                newPlace.classList.add('row', 'row-cols-1', 'py-3', 'px-sm-4', 'position-relative');
+                newPlace.style.paddingLeft = '0.75rem';
+                newPlace.style.paddingRight = '0.75rem';
+                break;
+            case 'SSkill':
+                newPlace.classList.add('col', 'px-sm-4', 'position-relative');
+                newPlace.style.paddingLeft = '0.75rem';
+                newPlace.style.paddingRight = '0.75rem';
+                break;
+            case 'projects':
+                newPlace.classList.add('col', 'p-sm-4', 'position-relative');
+                break;
+        }
+        let cont = this;
+        newPlace.addEventListener('dragstart',function(e){
+            let currentIndex:number = parseInt(newPlace.id);
+            let draggingCard:Card = cont.cards[currentIndex];
+            cont.places.forEach(place=>{
+                $(place).on('dragover',function(e:DragEvent){e.preventDefault()});
+                $(place).on('dragenter',function(e:DragEvent){
+                    let placeIndex:number = parseInt((e.delegateTarget as HTMLElement).id);
+                    draggingCard.Index = undefined;
+                    let cardsToMove = cont.cards.filter(card=>Math.min(currentIndex,placeIndex)<=card.Index && Math.max(currentIndex,placeIndex)>=card.Index);
+                    (currentIndex<placeIndex)?cardsToMove.forEach(card=>card.move('forward',false)):cardsToMove.forEach(card=>card.move('backward',false));
+                    currentIndex = placeIndex;
+                    draggingCard.Index = placeIndex;
+                    cont.refresh();
+                });
+            });
+        });
+        newPlace.addEventListener('dragend',function(){
+            cont.places.forEach(place=>{
+                $(place).off('dragover');
+                $(place).off('dragenter');
+            });
+        });
+        if (inSession) newPlace.setAttribute('draggable','true');
+        allPlaces.push(newPlace);
+        this.places.push(newPlace);
+        this.element.appendChild(newPlace);
+    }
+
+    public rewritePlacesId():void
+    {
+        for (let i in this.places) {
+            this.places[i].id = i;
+        }
+    }
+
+    public addCard(card:any,type:string)
+    {
+        if (type == this.containerType) {
+            if (this.isVoid) this.deleteVoidHolder();
+            this.addPlace();
+            switch (type) {
+                case 'education':
+                    this.cards.push(new ExpEduc(card as any,this,this.possibleId));
+                    break;
+                case 'experiences':
+                    this.cards.push(new ExpEduc(card as any,this,this.possibleId));
+                    break;
+                case 'HSkill':
+                    this.cards.push(new HSkill(card as any,this,this.possibleId));
+                    break;
+                case 'SSkill':
+                    this.cards.push(new SSkill(card as any,this,this.possibleId));
+                    break;
+                case 'projects':
+                    this.cards.push(new Project(card as any,this,this.possibleId));
+            }
+            this.refresh();
+            this.possibleId++;
+        }
+    }
+
+    public refresh():void
+    {
+        this.cards.sort((a:Card, b:Card) => {return a.Index - b.Index;});
+        for (let i in this.cards) {
+            if (!this.cards[i].Dragging) {
+                this.cards[i].Element.forEach(node=>{this.places[i].appendChild(node)});
+            }
+        }
+    }
+
+    public complementMovement(from:Card,dir:string):void
+    {
+        (this.cards.find(card=>(card.Index == from.Index && card != from)) as Card).move(dir,false);
+        this.refresh();
+    }
+
+    get ContainerType():string
+    {
+        return this.containerType;
+    }
+    get CardQuantity():number
+    {
+        return this.cards.length;
+    }
+    get Element():HTMLElement
+    {
+        return this.element;
+    }
+    get Places():HTMLElement[]
+    {
+        return this.places;
+    }
+    set Places(newPlaces:HTMLElement[])
+    {
+        this.places = newPlaces;
+    }
+    get Cards():Card[]
+    {
+        return this.cards;
+    }
+    set Cards(newCards:Card[])
+    {
+        this.cards = newCards;
+    }
+    set CardEditing(newCard:Card)
+    {
+        this.cardEditing = newCard;
+    }
+}
+
+class Card
+{
+    protected container:CardsContainer;
+    protected id:number;
+    protected type:string;
+    private index:number|undefined;
+    private dragging:boolean = false;
+    private editButton:HTMLElement = document.createElement('BUTTON');
+    private deleteButton:HTMLElement = document.createElement('BUTTON');
+    private moveForwardButton:HTMLElement = document.createElement('BUTTON');
+    private moveBackwardButton:HTMLElement = document.createElement('BUTTON');
+    private buttonsArr:HTMLElement[] = [this.moveForwardButton,this.moveBackwardButton,this.editButton,this.deleteButton];
+    protected buttonsContainer:HTMLElement = document.createElement('DIV');
+    protected element:HTMLElement[] = [];
+
+    public constructor(container:CardsContainer,type:string,id:number)
+    {
+        this.container = container;
+        this.id = id;
+        this.type = type;
+        this.index = container.CardQuantity;
+        this.buttonsArr.forEach(button=>{
+            button.setAttribute('type','button');
+            if (button !== this.deleteButton) button.classList.add('btn', 'text-warning');
+            let i = document.createElement('I');
+            i.classList.add('fa-solid');
+            switch (button) {
+                case this.editButton:
+                    button.title = 'Editar';
+                    button.setAttribute('data-bs-toggle','modal');
+                    button.setAttribute('data-bs-target',`#${type}-modal`);
+                    button.addEventListener('click',()=>{this.edit()});
+                    i.classList.add('fa-pen-to-square');
+                    break;
+                case this.deleteButton:
+                    button.title = 'Eliminar';
+                    button.addEventListener('click',()=>{this.deleteSelf()});
+                    button.classList.add('btn', 'text-danger');
+                    i.classList.add('fa-circle-xmark');
+                    break;
+                case this.moveForwardButton:
+                    button.title = 'Mover arriba';
+                    button.addEventListener('click',()=>{this.move('forward',true)});
+                    i.classList.add('fa-circle-chevron-up');
+                    break;
+                case this.moveBackwardButton:
+                    button.title = 'Mover abajo';
+                    button.addEventListener('click',()=>{this.move('backward',true)});
+                    i.classList.add('fa-circle-chevron-down');
+                    break;
+            }
+            button.appendChild(i);
+        });
+        if (type != 'HSkill') {
+            this.buttonsContainer.classList.add('card-header', 'bg-white', 'position-relative');
+            this.buttonsContainer.style.zIndex = '1';
+            let d = document.createElement('DIV');
+            d.classList.add('d-flex', 'justify-content-end');
+            this.buttonsArr.forEach(button=>{d.appendChild(button)});
+            this.buttonsContainer.appendChild(d);
+            sessionButtons.push(this.buttonsContainer);
+        } else {
+            this.buttonsContainer.classList.add('position-absolute', 'top-50', 'start-50', 'translate-middle', 'd-flex', 'bg-secondary', 'bg-opacity-50', 'rounded');
+            this.buttonsArr.forEach(button=>{this.buttonsContainer.appendChild(button)});
+            sessionButtons.push(this.buttonsContainer);
+        }
+        if (!inSession) this.buttonsContainer.classList.add('d-none');
+    }
+
+    private edit():void
+    {
+        this.container.CardEditing = this;
+        this.container.replaceValues(false);
+    }
+
+    public move(dir:string,needComplement:boolean):void
+    {
+        if (dir == 'forward' && this.index > 0) {
+            this.index--;
+            if (needComplement) this.container.complementMovement(this,'backward');
+        } else if (dir == 'backward' && this.index < (this.container.CardQuantity - 1)) {
+            this.index++;
+            if (needComplement) this.container.complementMovement(this,'forward');
+        }
+    }
+
+    private deleteSelf():void
+    {
+        this.container.Cards = this.container.Cards.filter(card => card != this);
+        let placeToRemove:HTMLElement = this.container.Places.find(place => place.id == (this.index as number).toString()) as HTMLElement;
+        this.container.Element.removeChild(placeToRemove);
+        this.container.Places = this.container.Places.filter(place => place != placeToRemove);
+        this.container.rewritePlacesId();
+        for (let i in this.container.Cards) {
+            this.container.Cards[i].Index = parseInt(i);
+        }
+        this.container.refresh();
+        if (this.container.Cards.length == 0 && this.container.Places.length == 0) this.container.createVoidHolder();
+    }
+
+    get Element():HTMLElement[]
+    {
+        return this.element;
+    }
+    get Dragging():boolean
+    {
+        return this.dragging;
+    }
+    get Index():number|undefined
+    {
+        return this.index;
+    }
+    set Index(newIndex:number|undefined)
+    {
+        this.index = newIndex;
+    }
+}
+
+class ExpEduc extends Card
+{
+    private concept:string;
+    private institutionImage:string;
+    private title:string;
+    private institution:string;
+    private date:{
+        type:string,
+        start:string|null,
+        end:string|null
+    };
+    private general:string|null;
+    private dateDescription:any = () => {
+        if (this.date.type == 'in progress' || this.date.type == 'finished') return 'Período';
+        else if (this.date.type == 'completion only') return 'Fecha de finalización';
+    };
+    private bg_img:HTMLImageElement = createElement('IMG',['opacity-25', 'ratio', 'ratio-1x1', 'w-auto', 'h-100'],undefined,undefined,undefined) as HTMLImageElement;
+    private body_head_img:HTMLImageElement = createElement('IMG',['h-100', 'w-100'],[{att:'style',value:'object-fit: contain;'}],undefined,undefined) as HTMLImageElement;
+    private body_headConcept:HTMLElement = createElement('H3',['card-title', 'd-inline-block', 'm-0', 'text-end'],undefined,undefined,undefined);
+    private bodyTitle:HTMLElement = createElement('P',['card-text', 'm-0', 'lh-sm'],undefined,undefined,undefined);
+    private bodyInstitution:HTMLElement = createElement('P',['card-text', 'm-0', 'lh-sm'],undefined,undefined,undefined);
+    private bodyDate:HTMLElement = createElement('P',['card-text', 'm-0', 'lh-sm'],undefined,undefined,undefined);
+    private bodyGeneral:HTMLElement = createElement('P',['card-text', 'm-0', 'lh-sm'],undefined,undefined,undefined);
+
+    public constructor(object:{concept:string,institutionImage:string,title:string,institution:string,date:{type:string,start:string|null,end:string|null},general:string|null},container:CardsContainer,id:number)
+    {
+        super(container,'ExpEduc',id);
+        this.concept = object.concept;
+        this.institutionImage = object.institutionImage;
+        this.title = object.title;
+        this.institution = object.institution;
+        this.date = object.date;
+        this.general = object.general;
+        this.createElement();
+    }
+
+    private generateUTCDate(date:Date):string
+    {
+        let response:string = '';
+        response+=date.getUTCDate()+'/';
+        let month:string|number = date.getUTCMonth()+1;
+        if (month < 10) month='0'+month.toString();
+        response+=month+'/'+date.getUTCFullYear();
+        return response;
+    }
+
+    private createDate():string
+    {
+        switch (this.date.type) {
+            case 'in progress':
+                let start1 = new Date(this.date.start as string);
+                return `${this.generateUTCDate(start1)} - No Finalizado (en curso)`;
+            case 'completion only':
+                let end1 = new Date(this.date.end as string);
+                return this.generateUTCDate(end1);
+            default:
+                let start2 = new Date(this.date.start as string);
+                let end2 = new Date(this.date.end as string);
+                return this.generateUTCDate(start2) + ' - ' + this.generateUTCDate(end2);
+        }
+    }
+
+    private selectBackground():string
+    {
+        if (this.container.ContainerType == 'education') {
+            if (this.date.type == 'in progress') return 'imgs/papel.png';
+            else return 'imgs/diploma.png';
+        } else if (this.container.ContainerType == 'experiences') return 'imgs/computadora.png';
+        else return '/';
+    }
+
+    private determinateExtraInfo():string
+    {
+        if (this.general) return `<span class="text-muted">${this.general}</span>`;
+        else return '';
+    }
+
+    public refreshContent():void 
+    {
+        this.bg_img.src = this.selectBackground();
+        this.body_head_img.src = this.institutionImage;
+        this.body_headConcept.innerText = this.concept;
+        this.bodyTitle.innerHTML = `Titulo: <span class="text-muted">${this.title}</span>`;
+        this.bodyInstitution.innerHTML = `Institución: <span class="text-muted">${this.institution}</span>`;
+        this.bodyDate.innerHTML = `${this.dateDescription()}: <span class="text-muted">${this.createDate()}</span>`;
+        this.bodyGeneral.innerHTML = this.determinateExtraInfo();
+    }
+
+    private createElement():void
+    {
+        this.element.push(this.buttonsContainer);
+
+        let bg_ = createElement('DIV',['h-100', 'w-auto', 'd-none', 'd-sm-flex', 'align-items-center', 'flex-row-reverse'],undefined,undefined,[this.bg_img]);
+        let bg = createElement('DIV',['card-img', 'h-100', 'w-100', 'p-4', 'position-absolute'],undefined,undefined,[bg_]);
+        this.element.push(bg);
+
+        let body_head_ = createElement('DIV',undefined,[{att:'style',value:'width: 80px; height: 40px;'}],undefined,[this.body_head_img]);
+        let body_head = createElement('DIV',['container-fluid', 'd-flex', 'justify-content-between', 'align-items-center', 'p-0'],undefined,undefined,[body_head_,this.body_headConcept]);
+        let bodyHr1 = createElement('HR',['px-2', 'my-2', 'd-block'],undefined,undefined,undefined);
+        let bodyHr2 = createElement('HR',['px-2', 'my-2', 'd-block'],undefined,undefined,undefined);
+        let body_ = createElement('DIV',['col', 'card-body', 'text-start', 'd-flex', 'flex-column', 'justify-content-evenly', 'h-100', 'py-0', 'px-4'],undefined,undefined,[body_head,bodyHr1,this.bodyTitle,this.bodyInstitution,bodyHr2,this.bodyDate,this.bodyGeneral]);
+        let body = createElement('DIV',['row', 'h-100', 'position-relative'],[{att:'style',value:'z-index: 1;'}],undefined,[body_]);
+        this.refreshContent();
+        this.element.push(body);
+    }
+
+    set Concept(newConcept:string)
+    {
+        this.concept = newConcept;
+    }
+    get Concept():string
+    {
+        return this.concept;
+    }
+    set InstitutionImage(newImg:string)
+    {
+        this.institutionImage = newImg;
+    }
+    get InstitutionImage():string
+    {
+        return this.institutionImage;
+    }
+    set Title(newTitle:string)
+    {
+        this.title = newTitle;
+    }
+    get Title():string
+    {
+        return this.title
+    }
+    set Institution(newInstitution:string)
+    {
+        this.institution = newInstitution;
+    }
+    get Institution():string
+    {
+        return this.institution;
+    }
+    set Date(newDate:{type:string,start:string|null,end:string|null})
+    {
+        this.date = newDate;
+    }
+    get Date():{type:string,start:string|null,end:string|null}
+    {
+        return this.date;
+    }
+    set General(newGeneral:string|null)
+    {
+        this.general = newGeneral;
+    }
+    get General():string|null
+    {
+        return this.general;
+    }
+}
+
+class HSkill extends Card
+{
+    private name:string;
+    private value:number;
+    private points:{
+        positives:string[],
+        negatives:string[]
+    };
+    private background:{
+        type:string,
+        animation:boolean,
+        src:string
+    };
+
+    public constructor(object:{name:string,value:number,points:{positives:string[],negatives:string[]},background:{type:string,animation:boolean,src:string}},container:CardsContainer,id:number)
+    {
+        super(container,'HSkill',id);
+        this.name = object.name;
+        this.value = object.value;
+        this.points = object.points;
+        this.background = object.background;
+    }
+}
+
+class SSkill extends Card
+{
+    private name:string;
+    private description:string;
+    private subSkills:{name:string,value:number}[];
+
+    public constructor(object:{name:string,description:string,subSkills:{name:string,value:number}[]},container:CardsContainer,id:number)
+    {
+        super(container,'SSkill',id);
+        this.name = object.name;
+        this.description = object.description;
+        this.subSkills = object.subSkills;
+    }
+}
+
+class Project extends Card
+{
+    private name:string;
+    private description:string;
+    private date:string;
+    private images:{type:string,src:string}[];
+
+    public constructor(object:{name:string,description:string,date:string,images:{type:string,src:string}[]},container:CardsContainer,id:number)
+    {
+        super(container,'Project',id);
+        this.name = object.name;
+        this.description = object.description;
+        this.date = object.date;
+        this.images = object.images;
+    }
+}
+
+let ownerInfo:OwnerInfo;
+let educationSection:CardsContainer;
+let experiencesSection:CardsContainer;
+let HSkillSection:CardsContainer;
+let SSkillSection:CardsContainer;
+let ProjectsSection:CardsContainer;
+fetch('https://raw.githubusercontent.com/AlanDuh/portfolio-FrontEnd/main/DOMElements.json')
+    .then(response=>response.json())
+    .then(data=>{
+        ownerInfo = new OwnerInfo(data.ownerInfo);
+        educationSection = new CardsContainer((document.getElementById('eduactionSectionContainer') as HTMLElement),'education' , data.education);
+        experiencesSection = new CardsContainer((document.getElementById('experiencesSectionContainer') as HTMLElement),'experiences' , data.experiences);
+        HSkillSection = new CardsContainer((document.getElementById('HSkillsSectionContainer') as HTMLElement),'HSkill' , data.skills.hard);
+        SSkillSection = new CardsContainer((document.getElementById('SSkillsSectionContainer') as HTMLElement),'SSkill' , data.skills.soft);
+        ProjectsSection = new CardsContainer((document.getElementById('projectsSectionContainer') as HTMLElement),'projects' , data.projects);
+    })
