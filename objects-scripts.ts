@@ -1,7 +1,7 @@
 let sessionButtons:HTMLElement[] = [];
 let allPlaces:HTMLElement[] = [];
 const adminAccount:{name:string,pass:string} = {
-    name: 'A D',
+    name: 'Alan',
     pass: '12345'
 }
 let inSession:boolean = false;
@@ -362,8 +362,8 @@ class CardsContainer
     private places:HTMLElement[] = [];
     private cards:Card[] = [];
     private containerType:string;
-    private cardEditing:ExpEduc;
-    private required:{simple:HTMLInputElement[],composed:{troggler:HTMLInputElement,cases:{ifVlue:string,required:HTMLInputElement[]}[]}[]|undefined};
+    private cardEditing:HSkill;
+    private required:{simple:HTMLInputElement|Node[],composed:{troggler:HTMLInputElement,cases:{ifVlue:string,required:HTMLInputElement[]}[]}[]|undefined};
     private saveButton:HTMLElement;
     private cancelButtons:NodeList;
     private addButton:HTMLElement;
@@ -386,7 +386,20 @@ class CardsContainer
                     this.isAdding = false;
                     this.addCard(this.createCard(),this.containerType);
                     this.cancel();
-                    $('#ExpEduc-modal').modal('hide');
+                    switch (this.containerType) {
+                        case 'education':
+                            $('#ExpEduc-modal').modal('hide');
+                            break;
+                        case 'experiences':
+                            $('#ExpEduc-modal').modal('hide');
+                            break;
+                        case 'HSkill':
+                            $('#HSkill-modal').modal('hide');
+                            break;
+                        case 'SSkill':
+                            $('#SSkill-modal').modal('hide');
+                            break;
+                    }
                 } else {
                     this.hasFailed = true;
                     showAlert('danger','Rellene todas las entradas requeridas');
@@ -509,6 +522,171 @@ class CardsContainer
             this.cancelButtons = document.querySelectorAll('.ExpEduc-edition-cancel');
             if (this.containerType == 'education') this.addButton = document.getElementById('add-card-education') as HTMLElement;
             else if (this.containerType == 'experiences') this.addButton = document.getElementById('add-card-experience') as HTMLElement;
+        } else if (this.containerType == 'HSkill') {
+            const name:HTMLInputElement = document.getElementById('HSkill-name') as HTMLInputElement;
+            const valueOverview:HTMLElement = document.getElementById('HSkill-value-overview') as HTMLElement;
+            const value:HTMLInputElement = document.getElementById('HSkill-percent') as HTMLInputElement;
+            value.addEventListener('input',()=>{
+                valueOverview.innerText = `${value.value}%`;
+            });
+            const bgType:NodeList = document.querySelectorAll('.HSkill-bgType');
+            const bgFile:NodeList = document.querySelectorAll('.HSkill-bg-file');
+            const bgLink:NodeList = document.querySelectorAll('.HSkill-bg-link');
+            bgType.forEach((node:any) => node.addEventListener('input',()=>{
+                bgType.forEach((otherNode:any) => {if(otherNode != node)otherNode.value = node.value});
+            }));
+            bgFile.forEach((node:any) => node.addEventListener('input',()=>{
+                bgFile.forEach((otherNode:any) => {if(otherNode != node)otherNode.files = node.files});
+                bgLink.forEach((linkNode:any) => {linkNode.value = URL.createObjectURL((node.files as any)[0])});
+            }));
+            bgLink.forEach((node:any) => node.addEventListener('input',()=>{
+                bgLink.forEach((otherNode:any) => {if(otherNode != node)otherNode.value = node.value});
+            }));
+            const positiveContainer:HTMLElement = document.getElementById('positive-points-container') as HTMLElement;
+            let positivePoints:HTMLElement[] = [document.getElementById('positive-point-0') as HTMLElement];
+            const getPositivePoints = ():HTMLInputElement[] => {
+                let points:HTMLInputElement[] = [];
+                positivePoints.forEach(point => points.push(point.querySelector('.point-name') as HTMLInputElement));
+                return points;
+            };
+            const addPositiveButton:HTMLElement = document.getElementById('add-positive-point') as HTMLElement;
+            const negativeContainer:HTMLElement = document.getElementById('negative-points-container') as HTMLElement;
+            let negativePoints:HTMLElement[] = [document.getElementById('negative-point-0') as HTMLElement];;
+            const getNegativePoints = ():HTMLInputElement[] => {
+                let points:HTMLInputElement[] = [];
+                negativePoints.forEach(point => points.push(point.querySelector('.point-name') as HTMLInputElement));
+                return points;
+            };
+            const addNegativeButton:HTMLElement = document.getElementById('add-negative-point') as HTMLElement;
+            let idAble:number = 0;
+            const refreshRequired = ():void => {
+                this.required = {
+                    simple: [name,...bgType,...bgLink,...getPositivePoints(),...getNegativePoints()],
+                    composed: undefined
+                };
+                this.allInputs = [name,...bgType,...bgLink,...getPositivePoints(),...getNegativePoints()] as HTMLElement[];
+            }
+            refreshRequired();
+            function addPositive(value:string|undefined) {
+                let deleter:HTMLElement = createElement('I',['fa-solid', 'fa-xmark', 'btn', 'p-0', 'positive-deleter', 'border-0'],[{att:'style', value:'font-size: .75em;'},{att:'bindedInput', value:`positive-point-${idAble}`},{att:'title', value:'Eliminar'}],undefined,undefined);
+                addDeleterListener('positive',deleter);
+                let _deleter:HTMLElement = createElement('DIV',['input-group-text'],undefined,undefined,[deleter]);
+                let input:HTMLInputElement = createElement('INPUT',['form-control', 'form-control-sm', 'point-name'],[{att:'type',value:'text'},{att:'aria-label',value:'type a positive point'}],undefined,undefined) as HTMLInputElement;
+                let point:HTMLElement = createElement('DIV',['input-group', 'input-group-sm', 'mb-1'],[{att:'id',value:`positive-point-${idAble}`}],undefined,[input,_deleter]);
+                positiveContainer.appendChild(point);
+                positivePoints.push(point);
+                idAble++;
+                if (positivePoints.length == 1) (positivePoints[0].querySelector('.positive-deleter') as HTMLElement).classList.add('disabled');
+                else if (positivePoints.length > 1) (positivePoints[0].querySelector('.positive-deleter') as HTMLElement).classList.remove('disabled');
+                if (value) input.value = value;
+                refreshRequired();
+            }
+            function addNegative(value:string|undefined) {
+                let deleter:HTMLElement = createElement('I',['fa-solid', 'fa-xmark', 'btn', 'p-0', 'negative-deleter', 'border-0'],[{att:'style', value:'font-size: .75em;'},{att:'bindedInput', value:`negative-point-${idAble}`},{att:'title', value:'Eliminar'}],undefined,undefined);
+                addDeleterListener('negative',deleter);
+                let _deleter:HTMLElement = createElement('DIV',['input-group-text'],undefined,undefined,[deleter]);
+                let input:HTMLInputElement = createElement('INPUT',['form-control', 'form-control-sm', 'point-name'],[{att:'type',value:'text'},{att:'aria-label',value:'type a negative point'}],undefined,undefined) as HTMLInputElement;
+                let point:HTMLElement = createElement('DIV',['input-group', 'input-group-sm', 'mb-1'],[{att:'id',value:`negative-point-${idAble}`}],undefined,[input,_deleter]);
+                negativeContainer.appendChild(point);
+                negativePoints.push(point);
+                idAble++;
+                if (negativePoints.length == 1) (negativePoints[0].querySelector('.negative-deleter') as HTMLElement).classList.add('disabled');
+                else if (negativePoints.length > 1) (negativePoints[0].querySelector('.negative-deleter') as HTMLElement).classList.remove('disabled');
+                if (value) input.value = value;
+                refreshRequired();
+            }
+            addPositiveButton.addEventListener('click',(e)=>{
+                e.preventDefault();
+                addPositive(undefined);
+            });
+            addNegativeButton.addEventListener('click',(e)=>{
+                e.preventDefault();
+                addNegative(undefined);
+            });
+            function addDeleterListener(type:string,button:HTMLElement):void
+            {
+                button.addEventListener('click',()=>{
+                    if(!button.classList.contains('disabled')) {
+                        switch (type) {
+                            case 'positive':
+                                let pointToRemove0:HTMLElement = positivePoints.find(point => point.id == button.getAttribute('bindedInput')) as HTMLElement;
+                                positivePoints = positivePoints.filter(input => input != pointToRemove0);
+                                positiveContainer.removeChild(pointToRemove0);
+                                if (positivePoints.length == 1) (positivePoints[0].querySelector('.positive-deleter') as HTMLElement).classList.add('disabled');
+                                break;
+                            case 'negative':
+                                let pointToRemove1:HTMLElement = negativePoints.find(point => point.id == button.getAttribute('bindedInput')) as HTMLElement;
+                                negativePoints = negativePoints.filter(input => input != pointToRemove1);
+                                negativeContainer.removeChild(pointToRemove1);
+                                if (negativePoints.length == 1) (negativePoints[0].querySelector('.negative-deleter') as HTMLElement).classList.add('disabled');
+                                break;
+                        }
+                        refreshRequired();
+                    }
+                });
+            }
+            const getValues = (from:HTMLInputElement[]):string[] => {
+                let values:string[] = [];
+                from.forEach(point => values.push((point as HTMLInputElement).value));
+                return values;
+            };
+            this.save = () => {
+                if (this.verify()) {
+                    this.cardEditing.Name = name.value;
+                    this.cardEditing.Value = parseInt(value.value);
+                    this.cardEditing.Points = {
+                        positives: getValues(getPositivePoints()),
+                        negatives: getValues(getNegativePoints())
+                    };
+                    this.cardEditing.Background = {
+                        type: (bgType[0] as HTMLInputElement).value,
+                        animation: false,
+                        src: (bgLink[0] as HTMLInputElement).value
+                    };
+                    $('#HSkill-modal').modal('hide');
+                    this.cardEditing.refreshContent();
+                    this.cancel();
+                } else {
+                    this.hasFailed = true;
+                    showAlert('danger','Rellene todas las entradas requeridas');
+                }
+            };
+            this.replaceValues = (toVoid:Boolean) => {
+                positiveContainer.innerHTML = '';
+                negativeContainer.innerHTML = '';
+                positivePoints = [];
+                negativePoints = [];
+                if (!toVoid) {
+                    for (let point of this.cardEditing.Points.positives) {addPositive(point)};
+                    for (let point of this.cardEditing.Points.negatives) {addNegative(point)};
+                } else {
+                    addPositive(undefined);
+                    addNegative(undefined);
+                }
+                value.value = (toVoid)?'50':this.cardEditing.Value.toString();
+                valueOverview.innerText = (toVoid)?'50%':value.value+'%';
+                name.value = (toVoid)?'':this.cardEditing.Name;
+                bgType.forEach(input => (input as HTMLInputElement).value = (toVoid)?'':this.cardEditing.Background.type);
+                bgLink.forEach(input => (input as HTMLInputElement).value = (toVoid)?'':this.cardEditing.Background.src);
+            };
+            this.createCard = ():{name:string,value:number,points:{positives:string[],negatives:string[]},background:{type:string,animation:boolean,src:string}} => {
+                return {
+                    name:name.value,
+                    value:parseInt(value.value),
+                    points: {
+                        positives: getValues(getPositivePoints()),
+                        negatives: getValues(getNegativePoints())
+                    },
+                    background: {
+                        type: (bgType[0] as HTMLInputElement).value,
+                        animation: false,
+                        src: (bgLink[0] as HTMLInputElement).value
+                    }
+                }
+            };
+            this.saveButton = document.getElementById('HSkill-save') as HTMLElement;
+            this.cancelButtons = document.querySelectorAll('.HSkill-cancel');
+            this.addButton = document.getElementById('add-card-hskill') as HTMLElement;
         }
     }
 
@@ -968,6 +1146,12 @@ class HSkill extends Card
         animation:boolean,
         src:string
     };
+    private nameContainer:HTMLElement = createElement('H4',['invisible', 'position-absolute'],[{att:'style',value:'z-index: 0;'}],undefined,undefined);
+    private positiveP:HTMLElement = createElement('P',['m-0'],[{att:'style',value:'color: #555;'}],undefined,undefined);
+    private negativeP:HTMLElement = createElement('P',['m-0','mt-3','mt-md-0'],[{att:'style',value:'color: #555;'}],undefined,undefined);
+    private bgContainer:HTMLElement = createElement('DIV',['position-absolute', 'h-100', 'w-100', 'top-0', 'start-0'],undefined,undefined,undefined);
+    private valuePositive:HTMLElement = createElement('DIV',['progress-bar', 'bg-success', 'position-relative', 'opacity-25'],[{att:'role',value:'progressbar'},{att:'aria-label',value:'positive'},{att:'style',value:'width: 75%; z-index: 1;'},{att:'aria-valuenow',value:'75'},{att:'aria-valuemin',value:'0'},{att:'aria-valuemax',value:'100'}],undefined,undefined);
+    private valueNegative:HTMLElement = createElement('DIV',['progress-bar', 'bg-danger', 'position-relative', 'opacity-25'],[{att:'role',value:'progressbar'},{att:'aria-label',value:'negative'},{att:'style',value:'width: 25%; z-index: 1;'},{att:'aria-valuenow',value:'25'},{att:'aria-valuemin',value:'0'},{att:'aria-valuemax',value:'100'}],undefined,undefined);
 
     public constructor(object:{name:string,value:number,points:{positives:string[],negatives:string[]},background:{type:string,animation:boolean,src:string}},container:CardsContainer,id:number)
     {
@@ -976,6 +1160,68 @@ class HSkill extends Card
         this.value = object.value;
         this.points = object.points;
         this.background = object.background;
+        this.createElement();
+        this.refreshContent();
+    }
+
+    private createElement():void
+    {
+        let cardBG:HTMLElement = createElement('DIV',['progress', 'position-absolute', 'h-100', 'w-100', 'shadow-sm', 'border'],undefined,undefined,[this.bgContainer,this.valuePositive,this.valueNegative]);
+
+        let cardBody_positivesContainer:HTMLElement = createElement('DIV',['col-12', 'col-md-6', 'text-start'],undefined,undefined,[this.positiveP]);
+        let cardBody_negativesContainer:HTMLElement = createElement('DIV',['col-12', 'col-md-6', 'text-end'],undefined,undefined,[this.negativeP]);
+        let cardBody_:HTMLElement = createElement('DIV',['row'],undefined,undefined,[cardBody_positivesContainer,cardBody_negativesContainer]);
+        let cardBody:HTMLElement = createElement('DIV',['container-fluid', 'position-relative', 'top-0', 'start-0', 'p-3'],[{att:'style',value:'z-index: 2;'}],undefined,[this.nameContainer,cardBody_,this.buttonsContainer]);
+        
+        let card:HTMLElement = createElement('DIV',['col','position-relative','p-0'],undefined,undefined,[cardBG,cardBody]);
+        this.element.push(card);
+    }
+
+    public refreshContent():void
+    {
+        this.nameContainer.innerText = this.name;
+        this.valuePositive.setAttribute('aria-valuenow',this.value.toString());
+        this.valuePositive.style.width = `${this.value}%`;
+        this.valueNegative.setAttribute('aria-valuenow',(100 - this.value).toString());
+        this.valueNegative.style.width = `${100 - this.value}%`;
+        this.bgContainer.innerHTML = `<img class="h-100 w-100" src="${this.background.src}" alt="${this.name} - Hard Skill Background" style="object-fit: cover;">`;
+        this.positiveP.innerHTML = '';
+        this.negativeP.innerHTML = '';
+        this.points.positives.forEach(point => this.positiveP.innerHTML += `<i class="fa-solid fa-check text-success"></i> ${point}<br>`);
+        this.points.negatives.forEach(point => this.negativeP.innerHTML += `${point} <i class="fa-solid fa-xmark text-danger"></i><br>`);
+    }
+    
+    set Name(newName:string)
+    {
+        this.name = newName;
+    }
+    get Name():string
+    {
+        return this.name;
+    }
+    set Value(newValue:number)
+    {
+        this.value = newValue;
+    }
+    get Value():number
+    {
+        return this.value;
+    }
+    set Points(newPoints:{positives:string[],negatives:string[]})
+    {
+        this.points = newPoints;
+    }
+    get Points():{positives:string[],negatives:string[]}
+    {
+        return this.points;
+    }
+    set Background(newBackground:{type:string,animation:boolean,src:string})
+    {
+        this.background = newBackground;
+    }
+    get Background():{type:string,animation:boolean,src:string}
+    {
+        return this.background;
     }
 }
 

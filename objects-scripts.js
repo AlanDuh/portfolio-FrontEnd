@@ -2,7 +2,7 @@
 let sessionButtons = [];
 let allPlaces = [];
 const adminAccount = {
-    name: 'A D',
+    name: 'Alan',
     pass: '12345'
 };
 let inSession = false;
@@ -330,7 +330,20 @@ class CardsContainer {
                     this.isAdding = false;
                     this.addCard(this.createCard(), this.containerType);
                     this.cancel();
-                    $('#ExpEduc-modal').modal('hide');
+                    switch (this.containerType) {
+                        case 'education':
+                            $('#ExpEduc-modal').modal('hide');
+                            break;
+                        case 'experiences':
+                            $('#ExpEduc-modal').modal('hide');
+                            break;
+                        case 'HSkill':
+                            $('#HSkill-modal').modal('hide');
+                            break;
+                        case 'SSkill':
+                            $('#SSkill-modal').modal('hide');
+                            break;
+                    }
                 }
                 else {
                     this.hasFailed = true;
@@ -447,6 +460,191 @@ class CardsContainer {
                 this.addButton = document.getElementById('add-card-education');
             else if (this.containerType == 'experiences')
                 this.addButton = document.getElementById('add-card-experience');
+        }
+        else if (this.containerType == 'HSkill') {
+            const name = document.getElementById('HSkill-name');
+            const valueOverview = document.getElementById('HSkill-value-overview');
+            const value = document.getElementById('HSkill-percent');
+            value.addEventListener('input', () => {
+                valueOverview.innerText = `${value.value}%`;
+            });
+            const bgType = document.querySelectorAll('.HSkill-bgType');
+            const bgFile = document.querySelectorAll('.HSkill-bg-file');
+            const bgLink = document.querySelectorAll('.HSkill-bg-link');
+            bgType.forEach((node) => node.addEventListener('input', () => {
+                bgType.forEach((otherNode) => { if (otherNode != node)
+                    otherNode.value = node.value; });
+            }));
+            bgFile.forEach((node) => node.addEventListener('input', () => {
+                bgFile.forEach((otherNode) => { if (otherNode != node)
+                    otherNode.files = node.files; });
+                bgLink.forEach((linkNode) => { linkNode.value = URL.createObjectURL(node.files[0]); });
+            }));
+            bgLink.forEach((node) => node.addEventListener('input', () => {
+                bgLink.forEach((otherNode) => { if (otherNode != node)
+                    otherNode.value = node.value; });
+            }));
+            const positiveContainer = document.getElementById('positive-points-container');
+            let positivePoints = [document.getElementById('positive-point-0')];
+            const getPositivePoints = () => {
+                let points = [];
+                positivePoints.forEach(point => points.push(point.querySelector('.point-name')));
+                return points;
+            };
+            const addPositiveButton = document.getElementById('add-positive-point');
+            const negativeContainer = document.getElementById('negative-points-container');
+            let negativePoints = [document.getElementById('negative-point-0')];
+            ;
+            const getNegativePoints = () => {
+                let points = [];
+                negativePoints.forEach(point => points.push(point.querySelector('.point-name')));
+                return points;
+            };
+            const addNegativeButton = document.getElementById('add-negative-point');
+            let idAble = 0;
+            const refreshRequired = () => {
+                this.required = {
+                    simple: [name, ...bgType, ...bgLink, ...getPositivePoints(), ...getNegativePoints()],
+                    composed: undefined
+                };
+                this.allInputs = [name, ...bgType, ...bgLink, ...getPositivePoints(), ...getNegativePoints()];
+            };
+            refreshRequired();
+            function addPositive(value) {
+                let deleter = createElement('I', ['fa-solid', 'fa-xmark', 'btn', 'p-0', 'positive-deleter', 'border-0'], [{ att: 'style', value: 'font-size: .75em;' }, { att: 'bindedInput', value: `positive-point-${idAble}` }, { att: 'title', value: 'Eliminar' }], undefined, undefined);
+                addDeleterListener('positive', deleter);
+                let _deleter = createElement('DIV', ['input-group-text'], undefined, undefined, [deleter]);
+                let input = createElement('INPUT', ['form-control', 'form-control-sm', 'point-name'], [{ att: 'type', value: 'text' }, { att: 'aria-label', value: 'type a positive point' }], undefined, undefined);
+                let point = createElement('DIV', ['input-group', 'input-group-sm', 'mb-1'], [{ att: 'id', value: `positive-point-${idAble}` }], undefined, [input, _deleter]);
+                positiveContainer.appendChild(point);
+                positivePoints.push(point);
+                idAble++;
+                if (positivePoints.length == 1)
+                    positivePoints[0].querySelector('.positive-deleter').classList.add('disabled');
+                else if (positivePoints.length > 1)
+                    positivePoints[0].querySelector('.positive-deleter').classList.remove('disabled');
+                if (value)
+                    input.value = value;
+                refreshRequired();
+            }
+            function addNegative(value) {
+                let deleter = createElement('I', ['fa-solid', 'fa-xmark', 'btn', 'p-0', 'negative-deleter', 'border-0'], [{ att: 'style', value: 'font-size: .75em;' }, { att: 'bindedInput', value: `negative-point-${idAble}` }, { att: 'title', value: 'Eliminar' }], undefined, undefined);
+                addDeleterListener('negative', deleter);
+                let _deleter = createElement('DIV', ['input-group-text'], undefined, undefined, [deleter]);
+                let input = createElement('INPUT', ['form-control', 'form-control-sm', 'point-name'], [{ att: 'type', value: 'text' }, { att: 'aria-label', value: 'type a negative point' }], undefined, undefined);
+                let point = createElement('DIV', ['input-group', 'input-group-sm', 'mb-1'], [{ att: 'id', value: `negative-point-${idAble}` }], undefined, [input, _deleter]);
+                negativeContainer.appendChild(point);
+                negativePoints.push(point);
+                idAble++;
+                if (negativePoints.length == 1)
+                    negativePoints[0].querySelector('.negative-deleter').classList.add('disabled');
+                else if (negativePoints.length > 1)
+                    negativePoints[0].querySelector('.negative-deleter').classList.remove('disabled');
+                if (value)
+                    input.value = value;
+                refreshRequired();
+            }
+            addPositiveButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                addPositive(undefined);
+            });
+            addNegativeButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                addNegative(undefined);
+            });
+            function addDeleterListener(type, button) {
+                button.addEventListener('click', () => {
+                    if (!button.classList.contains('disabled')) {
+                        switch (type) {
+                            case 'positive':
+                                let pointToRemove0 = positivePoints.find(point => point.id == button.getAttribute('bindedInput'));
+                                positivePoints = positivePoints.filter(input => input != pointToRemove0);
+                                positiveContainer.removeChild(pointToRemove0);
+                                if (positivePoints.length == 1)
+                                    positivePoints[0].querySelector('.positive-deleter').classList.add('disabled');
+                                break;
+                            case 'negative':
+                                let pointToRemove1 = negativePoints.find(point => point.id == button.getAttribute('bindedInput'));
+                                negativePoints = negativePoints.filter(input => input != pointToRemove1);
+                                negativeContainer.removeChild(pointToRemove1);
+                                if (negativePoints.length == 1)
+                                    negativePoints[0].querySelector('.negative-deleter').classList.add('disabled');
+                                break;
+                        }
+                        refreshRequired();
+                    }
+                });
+            }
+            const getValues = (from) => {
+                let values = [];
+                from.forEach(point => values.push(point.value));
+                return values;
+            };
+            this.save = () => {
+                if (this.verify()) {
+                    this.cardEditing.Name = name.value;
+                    this.cardEditing.Value = parseInt(value.value);
+                    this.cardEditing.Points = {
+                        positives: getValues(getPositivePoints()),
+                        negatives: getValues(getNegativePoints())
+                    };
+                    this.cardEditing.Background = {
+                        type: bgType[0].value,
+                        animation: false,
+                        src: bgLink[0].value
+                    };
+                    $('#HSkill-modal').modal('hide');
+                    this.cardEditing.refreshContent();
+                    this.cancel();
+                }
+                else {
+                    this.hasFailed = true;
+                    showAlert('danger', 'Rellene todas las entradas requeridas');
+                }
+            };
+            this.replaceValues = (toVoid) => {
+                positiveContainer.innerHTML = '';
+                negativeContainer.innerHTML = '';
+                positivePoints = [];
+                negativePoints = [];
+                if (!toVoid) {
+                    for (let point of this.cardEditing.Points.positives) {
+                        addPositive(point);
+                    }
+                    ;
+                    for (let point of this.cardEditing.Points.negatives) {
+                        addNegative(point);
+                    }
+                    ;
+                }
+                else {
+                    addPositive(undefined);
+                    addNegative(undefined);
+                }
+                value.value = (toVoid) ? '50' : this.cardEditing.Value.toString();
+                valueOverview.innerText = (toVoid) ? '50%' : value.value + '%';
+                name.value = (toVoid) ? '' : this.cardEditing.Name;
+                bgType.forEach(input => input.value = (toVoid) ? '' : this.cardEditing.Background.type);
+                bgLink.forEach(input => input.value = (toVoid) ? '' : this.cardEditing.Background.src);
+            };
+            this.createCard = () => {
+                return {
+                    name: name.value,
+                    value: parseInt(value.value),
+                    points: {
+                        positives: getValues(getPositivePoints()),
+                        negatives: getValues(getNegativePoints())
+                    },
+                    background: {
+                        type: bgType[0].value,
+                        animation: false,
+                        src: bgLink[0].value
+                    }
+                };
+            };
+            this.saveButton = document.getElementById('HSkill-save');
+            this.cancelButtons = document.querySelectorAll('.HSkill-cancel');
+            this.addButton = document.getElementById('add-card-hskill');
         }
     }
     verify() {
@@ -838,10 +1036,63 @@ class ExpEduc extends Card {
 class HSkill extends Card {
     constructor(object, container, id) {
         super(container, 'HSkill', id);
+        this.nameContainer = createElement('H4', ['invisible', 'position-absolute'], [{ att: 'style', value: 'z-index: 0;' }], undefined, undefined);
+        this.positiveP = createElement('P', ['m-0'], [{ att: 'style', value: 'color: #555;' }], undefined, undefined);
+        this.negativeP = createElement('P', ['m-0', 'mt-3', 'mt-md-0'], [{ att: 'style', value: 'color: #555;' }], undefined, undefined);
+        this.bgContainer = createElement('DIV', ['position-absolute', 'h-100', 'w-100', 'top-0', 'start-0'], undefined, undefined, undefined);
+        this.valuePositive = createElement('DIV', ['progress-bar', 'bg-success', 'position-relative', 'opacity-25'], [{ att: 'role', value: 'progressbar' }, { att: 'aria-label', value: 'positive' }, { att: 'style', value: 'width: 75%; z-index: 1;' }, { att: 'aria-valuenow', value: '75' }, { att: 'aria-valuemin', value: '0' }, { att: 'aria-valuemax', value: '100' }], undefined, undefined);
+        this.valueNegative = createElement('DIV', ['progress-bar', 'bg-danger', 'position-relative', 'opacity-25'], [{ att: 'role', value: 'progressbar' }, { att: 'aria-label', value: 'negative' }, { att: 'style', value: 'width: 25%; z-index: 1;' }, { att: 'aria-valuenow', value: '25' }, { att: 'aria-valuemin', value: '0' }, { att: 'aria-valuemax', value: '100' }], undefined, undefined);
         this.name = object.name;
         this.value = object.value;
         this.points = object.points;
         this.background = object.background;
+        this.createElement();
+        this.refreshContent();
+    }
+    createElement() {
+        let cardBG = createElement('DIV', ['progress', 'position-absolute', 'h-100', 'w-100', 'shadow-sm', 'border'], undefined, undefined, [this.bgContainer, this.valuePositive, this.valueNegative]);
+        let cardBody_positivesContainer = createElement('DIV', ['col-12', 'col-md-6', 'text-start'], undefined, undefined, [this.positiveP]);
+        let cardBody_negativesContainer = createElement('DIV', ['col-12', 'col-md-6', 'text-end'], undefined, undefined, [this.negativeP]);
+        let cardBody_ = createElement('DIV', ['row'], undefined, undefined, [cardBody_positivesContainer, cardBody_negativesContainer]);
+        let cardBody = createElement('DIV', ['container-fluid', 'position-relative', 'top-0', 'start-0', 'p-3'], [{ att: 'style', value: 'z-index: 2;' }], undefined, [this.nameContainer, cardBody_, this.buttonsContainer]);
+        let card = createElement('DIV', ['col', 'position-relative', 'p-0'], undefined, undefined, [cardBG, cardBody]);
+        this.element.push(card);
+    }
+    refreshContent() {
+        this.nameContainer.innerText = this.name;
+        this.valuePositive.setAttribute('aria-valuenow', this.value.toString());
+        this.valuePositive.style.width = `${this.value}%`;
+        this.valueNegative.setAttribute('aria-valuenow', (100 - this.value).toString());
+        this.valueNegative.style.width = `${100 - this.value}%`;
+        this.bgContainer.innerHTML = `<img class="h-100 w-100" src="${this.background.src}" alt="${this.name} - Hard Skill Background" style="object-fit: cover;">`;
+        this.positiveP.innerHTML = '';
+        this.negativeP.innerHTML = '';
+        this.points.positives.forEach(point => this.positiveP.innerHTML += `<i class="fa-solid fa-check text-success"></i> ${point}<br>`);
+        this.points.negatives.forEach(point => this.negativeP.innerHTML += `${point} <i class="fa-solid fa-xmark text-danger"></i><br>`);
+    }
+    set Name(newName) {
+        this.name = newName;
+    }
+    get Name() {
+        return this.name;
+    }
+    set Value(newValue) {
+        this.value = newValue;
+    }
+    get Value() {
+        return this.value;
+    }
+    set Points(newPoints) {
+        this.points = newPoints;
+    }
+    get Points() {
+        return this.points;
+    }
+    set Background(newBackground) {
+        this.background = newBackground;
+    }
+    get Background() {
+        return this.background;
     }
 }
 class SSkill extends Card {
