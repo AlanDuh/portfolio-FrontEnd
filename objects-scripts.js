@@ -34,6 +34,7 @@ function logOut() {
     sessionButtons.forEach(element => element.classList.add('d-none'));
     inSession = false;
     allPlaces.forEach(place => place.setAttribute('draggable', 'false'));
+    $('#offcanvasNavbar2').offcanvas('hide');
     showAlert('warning', 'Se ha cerrado la sesión');
 }
 function createElement(type, classes, attributes, parent, children) {
@@ -646,6 +647,104 @@ class CardsContainer {
             this.cancelButtons = document.querySelectorAll('.HSkill-cancel');
             this.addButton = document.getElementById('add-card-hskill');
         }
+        else if (this.containerType == 'SSkill') {
+            const name = document.getElementById('SSkill-name');
+            const description = document.getElementById('SSkill-general');
+            const subContainer = document.getElementById('SSkill-sub-skills');
+            const subSkillAdder = document.getElementById('addSubSkill');
+            subSkillAdder.addEventListener('click', (e) => {
+                e.preventDefault();
+                addSubSkill(undefined);
+            });
+            let idAble = 0;
+            let allSubSkills = [];
+            const allSubSkillsValues = () => {
+                let subSkills = [];
+                allSubSkills.forEach(subSkill => subSkills.push({
+                    name: subSkill.querySelector('.sub-skill-name').value,
+                    value: parseInt(subSkill.querySelector('.sub-skill-value').value)
+                }));
+                return subSkills;
+            };
+            const refreshRequired = () => {
+                this.required = {
+                    simple: [name, description, ...subContainer.querySelectorAll('.sub-skill-name'), ...subContainer.querySelectorAll('sub-skill-value')],
+                    composed: undefined
+                };
+                this.allInputs = [name, description, ...subContainer.querySelectorAll('.sub-skill-name'), ...subContainer.querySelectorAll('sub-skill-value')];
+            };
+            function addSubSkill(initValue) {
+                let value = createElement('INPUT', ['form-range', 'sub-skill-value'], [{ att: 'type', value: 'range' }, { att: 'min', value: '0' }, { att: 'max', value: '100' }, { att: 'id', value: `sub-skill-percent-${idAble}` }], undefined, undefined);
+                let _value = createElement('DIV', ['d-flex', 'align-items-center', 'p-0', 'px-2', 'input-group-item', 'border', 'bg-white'], [{ att: 'style', value: 'flex-grow: 1;' }], undefined, [value]);
+                let valueOverview = createElement('SPAN', ['input-group-text', 'p-0', 'px-2'], undefined, undefined, undefined);
+                value.addEventListener('input', () => { valueOverview.innerText = `${value.value}%`; });
+                let deleter = createElement('I', ['fa-solid', 'fa-xmark'], [{ att: 'title', value: 'Eliminar sub-skill' }], undefined, undefined);
+                let _deleter = createElement('BUTTON', ['btn', 'border', 'p-0', 'px-2', 'text-muted', 'bg-white', 'deleter'], [{ att: 'type', value: 'button' }, { att: 'id', value: `sub-skill-deleter-${idAble}` }], undefined, [deleter]);
+                _deleter.addEventListener('click', () => {
+                    subContainer.removeChild(subSkill);
+                    allSubSkills = allSubSkills.filter(sskill => sskill != subSkill);
+                    if (allSubSkills.length == 1)
+                        allSubSkills[0].querySelector('.deleter').classList.add('disabled');
+                    refreshRequired();
+                });
+                let subSkillBody = createElement('DIV', ['input-group', 'mb-2'], [{ att: 'style', value: 'font-size: 1em; height: 31px;' }], undefined, [valueOverview, _value, _deleter]);
+                let label1 = createElement('LABEL', ['form-label', 'mb-1'], [{ att: 'for', value: `sub-skill-percent-${idAble}` }], undefined, undefined);
+                label1.innerHTML = 'Porcentaje de <i>sub-skill</i>:';
+                let _subSkillBody = createElement('DIV', ['col-sm-8'], undefined, undefined, [label1, subSkillBody]);
+                let name = createElement('INPUT', ['form-control', 'form-control-sm', 'sub-skill-name'], [{ att: 'type', value: 'text' }, { att: 'id', value: `sub-skill-name-${idAble}` }], undefined, undefined);
+                let label0 = createElement('LABEL', ['mb-1', 'form-label'], [{ att: 'for', value: `sub-skill-name-${idAble}` }], undefined, undefined);
+                label0.innerHTML = 'Nombre de <i>sub-skill</i>:';
+                let subSkillHead = createElement('DIV', ['col-sm-4'], undefined, undefined, [label0, name]);
+                let subSkill = createElement('DIV', ['m-2', 'row', 'g-2', 'rounded', 'bg-light', 'shadow-sm'], [{ att: 'id', value: `sub-skill-${idAble}` }, { att: 'style', value: 'font-size: .74em;' }], undefined, [subSkillHead, _subSkillBody]);
+                idAble++;
+                if (initValue) {
+                    value.value = initValue.value.toString();
+                    name.value = initValue.name;
+                }
+                valueOverview.innerText = `${value.value}%`;
+                allSubSkills.push(subSkill);
+                subContainer.appendChild(subSkill);
+                if (allSubSkills.length == 1)
+                    _deleter.classList.add('disabled');
+                else if (allSubSkills.length > 1)
+                    allSubSkills[0].querySelector('.deleter').classList.remove('disabled');
+                refreshRequired();
+            }
+            this.save = () => {
+                if (this.verify()) {
+                    this.cardEditing.Name = name.value;
+                    this.cardEditing.Description = description.value;
+                    this.cardEditing.SubSkills = allSubSkillsValues();
+                    $('#SSkill-modal').modal('hide');
+                    this.cardEditing.refreshContent();
+                    this.cancel();
+                }
+                else {
+                    this.hasFailed = true;
+                    showAlert('danger', 'Rellene todas las entradas requeridas');
+                }
+            };
+            this.createCard = () => {
+                return {
+                    name: name.value,
+                    description: description.value,
+                    subSkills: allSubSkillsValues()
+                };
+            };
+            this.replaceValues = (toVoid) => {
+                name.value = (toVoid) ? '' : this.cardEditing.Name;
+                description.value = (toVoid) ? '' : this.cardEditing.Description;
+                subContainer.innerHTML = '';
+                allSubSkills = [];
+                if (toVoid)
+                    addSubSkill(undefined);
+                else
+                    this.cardEditing.SubSkills.forEach(subSkill => addSubSkill(subSkill));
+            };
+            this.saveButton = document.getElementById('SSkill-save');
+            this.cancelButtons = document.querySelectorAll('.SSkill-cancel');
+            this.addButton = document.getElementById('add-card-sskill');
+        }
     }
     verify() {
         var _a;
@@ -850,7 +949,7 @@ class Card {
             button.appendChild(i);
         });
         if (type != 'HSkill') {
-            this.buttonsContainer.classList.add('card-header', 'bg-white', 'position-relative');
+            this.buttonsContainer.classList.add('card-header', 'bg-white', 'position-relative', 'p-0');
             this.buttonsContainer.style.zIndex = '1';
             let d = document.createElement('DIV');
             d.classList.add('d-flex', 'justify-content-end');
@@ -1098,9 +1197,65 @@ class HSkill extends Card {
 class SSkill extends Card {
     constructor(object, container, id) {
         super(container, 'SSkill', id);
+        this.nameContainer = createElement('H4', ['d-inline-block', 'fs-5', 'me-3', 'mb-0'], undefined, undefined, undefined);
+        this.value = createElement('DIV', ['progress-bar'], [{ att: 'role', value: 'progressbar' }, { att: 'style', value: 'width: 0%;' }, { att: 'aria-valuenow', value: '0' }, { att: 'aria-valuemin', value: '0' }, { att: 'aria-valuemax', value: '100' }], undefined, undefined);
+        this.subSkillsContainter = createElement('DIV', ['accordion-body', 'pt-0'], undefined, undefined, undefined);
+        this.descriptionContainer = createElement('P', undefined, [{ att: 'style', value: 'font-size: .85em;' }], undefined, undefined);
         this.name = object.name;
         this.description = object.description;
         this.subSkills = object.subSkills;
+        this.createElement();
+        this.refreshContent();
+    }
+    createElement() {
+        let _value = createElement('DIV', ['progress'], [{ att: 'style', value: 'flex-grow: 1;' }], undefined, [this.value]);
+        let head = createElement('LI', ['list-group-item', 'd-flex', 'align-items-center'], [{ att: 'style', value: 'flex-grow: 0;' }], undefined, [this.nameContainer, _value]);
+        let _subSkillContainer = createElement('DIV', ['accordion-collapse', 'collapse'], [{ att: 'id', value: `collapse-${this.id}` }], undefined, [this.subSkillsContainter]);
+        let _subSkillButton = createElement('BUTTON', ['accordion-button', 'collapsed', 'p-0', 'm-0', 'w-100', 'h1', 'bg-white', 'shadow-none'], [{ att: 'type', value: 'button' }, { att: 'data-bs-toggle', value: 'collapse' }, { att: 'data-bs-target', value: `#collapse-${this.id}` }, { att: 'aria-expanded', value: 'false' }, { att: 'aria-controls', value: `collapse-${this.id}` }], undefined, undefined);
+        let __subSkillContainer = createElement('DIV', ['accordion-item'], undefined, undefined, [_subSkillButton, _subSkillContainer]);
+        let ___subSkillContainer = createElement('LI', ['list-group-item', 'accordion', 'accordion-flush', 'p-0'], [{ att: 'style', value: 'flex-grow: 0;' }], undefined, [__subSkillContainer]);
+        let _description = createElement('LI', ['list-group-item', 'text-muted'], [{ att: 'style', value: 'flex-grow: 1;' }], undefined, [this.descriptionContainer]);
+        let body = createElement('UL', ['list-group', 'list-group-flush', 'd-flex', 'flex-column', 'h-100'], undefined, undefined, [head, ___subSkillContainer, _description]);
+        let card = createElement('DIV', ['card', 'h-100', 'overflow-hidden', 'shadow-sm'], undefined, undefined, [this.buttonsContainer, body]);
+        this.element.push(card);
+    }
+    refreshContent() {
+        this.nameContainer.innerText = this.name;
+        let valueSum = 0;
+        this.subSkillsContainter.innerHTML = '';
+        this.subSkills.forEach(skill => {
+            valueSum += skill.value;
+            let value = createElement('DIV', ['progress-bar'], [{ att: 'role', value: 'progressbar' }, { att: 'style', value: `width: ${skill.value}%;` }, { att: 'aria-valuenow', value: `${skill.value}` }, { att: 'aria-valuemin', value: '0' }, { att: 'aria-valuemax', value: '100' }], undefined, undefined);
+            let _value = createElement('DIV', ['progress'], [{ att: 'style', value: 'flex-grow: 1; height: 1px;' }], undefined, [value]);
+            let name = createElement('H5', ['d-inline-block', 'fs-6', 'm-0', 'me-3'], undefined, undefined, undefined);
+            name.innerText = skill.name;
+            let valueOverview = createElement('P', ['d-inline-block', 'fs-6', 'm-0', 'ms-3'], undefined, undefined, undefined);
+            valueOverview.innerText = `${skill.value}%`;
+            let container = createElement('DIV', ['d-flex', 'align-items-center'], undefined, this.subSkillsContainter, [name, _value, valueOverview]);
+        });
+        let valueMid = Math.trunc(valueSum / this.subSkills.length);
+        this.value.style.width = `${valueMid}%`;
+        this.value.setAttribute('aria-valuenow', valueMid.toString());
+        this.value.innerText = `${valueMid}%`;
+        this.descriptionContainer.innerHTML = this.description;
+    }
+    get Name() {
+        return this.name;
+    }
+    set Name(newName) {
+        this.name = newName;
+    }
+    get Description() {
+        return this.description;
+    }
+    set Description(newDescription) {
+        this.description = newDescription;
+    }
+    get SubSkills() {
+        return this.subSkills;
+    }
+    set SubSkills(newSubSkills) {
+        this.subSkills = newSubSkills;
     }
 }
 class Project extends Card {

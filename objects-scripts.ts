@@ -34,6 +34,7 @@ function logOut()
     sessionButtons.forEach(element=>element.classList.add('d-none'));
     inSession = false;
     allPlaces.forEach(place=>place.setAttribute('draggable','false'));
+    $('#offcanvasNavbar2').offcanvas('hide');
     showAlert('warning','Se ha cerrado la sesión');
 }
 
@@ -362,7 +363,7 @@ class CardsContainer
     private places:HTMLElement[] = [];
     private cards:Card[] = [];
     private containerType:string;
-    private cardEditing:HSkill;
+    private cardEditing:SSkill;
     private required:{simple:HTMLInputElement|Node[],composed:{troggler:HTMLInputElement,cases:{ifVlue:string,required:HTMLInputElement[]}[]}[]|undefined};
     private saveButton:HTMLElement;
     private cancelButtons:NodeList;
@@ -687,6 +688,98 @@ class CardsContainer
             this.saveButton = document.getElementById('HSkill-save') as HTMLElement;
             this.cancelButtons = document.querySelectorAll('.HSkill-cancel');
             this.addButton = document.getElementById('add-card-hskill') as HTMLElement;
+        } else if (this.containerType == 'SSkill') {
+            const name:HTMLInputElement = document.getElementById('SSkill-name') as HTMLInputElement;
+            const description:HTMLInputElement = document.getElementById('SSkill-general') as HTMLInputElement;
+            const subContainer:HTMLInputElement = document.getElementById('SSkill-sub-skills') as HTMLInputElement;
+            const subSkillAdder:HTMLElement = document.getElementById('addSubSkill') as HTMLElement;
+            subSkillAdder.addEventListener('click',(e)=>{
+                e.preventDefault();
+                addSubSkill(undefined);
+            });
+            let idAble:number = 0;
+            let allSubSkills:HTMLElement[] = [];
+            const allSubSkillsValues = ():{name:string,value:number}[] => {
+                let subSkills:{name:string,value:number}[] = [];
+                allSubSkills.forEach(subSkill => subSkills.push({
+                    name:(subSkill.querySelector('.sub-skill-name') as HTMLInputElement).value,
+                    value:parseInt((subSkill.querySelector('.sub-skill-value') as HTMLInputElement).value)
+                }));
+                return subSkills;
+            }
+            const refreshRequired = ():void => {
+                this.required = {
+                    simple: [name,description,...subContainer.querySelectorAll('.sub-skill-name'),...subContainer.querySelectorAll('sub-skill-value')],
+                    composed: undefined
+                }
+                this.allInputs = [name,description,...subContainer.querySelectorAll('.sub-skill-name') as any,...subContainer.querySelectorAll('sub-skill-value')];
+            }
+            function addSubSkill(initValue:{name:string,value:number}|undefined):void
+            {
+                let value:HTMLInputElement = createElement('INPUT',['form-range', 'sub-skill-value'],[{att:'type',value:'range'},{att:'min',value:'0'},{att:'max',value:'100'},{att:'id',value:`sub-skill-percent-${idAble}`}],undefined,undefined) as HTMLInputElement;
+                let _value:HTMLElement = createElement('DIV',['d-flex', 'align-items-center', 'p-0', 'px-2', 'input-group-item', 'border', 'bg-white'],[{att:'style',value:'flex-grow: 1;'}],undefined,[value]);
+                let valueOverview:HTMLElement = createElement('SPAN',['input-group-text', 'p-0', 'px-2'],undefined,undefined,undefined);
+                value.addEventListener('input',()=>{valueOverview.innerText = `${value.value}%`});
+                let deleter:HTMLElement = createElement('I',['fa-solid', 'fa-xmark'],[{att:'title',value:'Eliminar sub-skill'}],undefined,undefined);
+                let _deleter:HTMLElement = createElement('BUTTON',['btn', 'border', 'p-0', 'px-2', 'text-muted', 'bg-white', 'deleter'],[{att:'type',value:'button'},{att:'id',value:`sub-skill-deleter-${idAble}`}],undefined,[deleter]);
+                _deleter.addEventListener('click',()=>{
+                    subContainer.removeChild(subSkill);
+                    allSubSkills = allSubSkills.filter(sskill => sskill != subSkill);
+                    if (allSubSkills.length == 1) (allSubSkills[0].querySelector('.deleter') as HTMLElement).classList.add('disabled');
+                    refreshRequired();
+                });
+                let subSkillBody:HTMLElement = createElement('DIV',['input-group','mb-2'],[{att:'style',value:'font-size: 1em; height: 31px;'}],undefined,[valueOverview,_value,_deleter]);
+                let label1:HTMLElement = createElement('LABEL',['form-label', 'mb-1'],[{att:'for',value:`sub-skill-percent-${idAble}`}],undefined,undefined);
+                label1.innerHTML = 'Porcentaje de <i>sub-skill</i>:';
+                let _subSkillBody:HTMLElement = createElement('DIV',['col-sm-8'],undefined,undefined,[label1,subSkillBody]);
+                let name:HTMLInputElement = createElement('INPUT',['form-control', 'form-control-sm', 'sub-skill-name'],[{att:'type',value:'text'},{att:'id',value:`sub-skill-name-${idAble}`}],undefined,undefined) as HTMLInputElement;
+                let label0:HTMLElement = createElement('LABEL',['mb-1', 'form-label'],[{att:'for',value:`sub-skill-name-${idAble}`}],undefined,undefined);
+                label0.innerHTML = 'Nombre de <i>sub-skill</i>:';
+                let subSkillHead:HTMLElement = createElement('DIV',['col-sm-4'],undefined,undefined,[label0,name]);
+                let subSkill:HTMLElement = createElement('DIV',['m-2', 'row', 'g-2', 'rounded', 'bg-light', 'shadow-sm'],[{att:'id',value:`sub-skill-${idAble}`},{att:'style',value:'font-size: .74em;'}],undefined,[subSkillHead,_subSkillBody]);
+                idAble++;
+                if (initValue) {
+                    value.value = initValue.value.toString();
+                    name.value = initValue.name;
+                }
+                valueOverview.innerText = `${value.value}%`;
+                allSubSkills.push(subSkill);
+                subContainer.appendChild(subSkill);
+                if (allSubSkills.length == 1) _deleter.classList.add('disabled');
+                else if (allSubSkills.length > 1) (allSubSkills[0].querySelector('.deleter') as HTMLElement).classList.remove('disabled');
+                refreshRequired();
+            }
+            this.save = () => {
+                if (this.verify()) {
+                    this.cardEditing.Name = name.value;
+                    this.cardEditing.Description = description.value;
+                    this.cardEditing.SubSkills = allSubSkillsValues();
+                    $('#SSkill-modal').modal('hide');
+                    this.cardEditing.refreshContent();
+                    this.cancel();
+                } else {
+                    this.hasFailed = true;
+                    showAlert('danger','Rellene todas las entradas requeridas');
+                }
+            };
+            this.createCard = ():{name:string,description:string,subSkills:{name:string,value:number}[]} => {
+                return {
+                    name:name.value,
+                    description:description.value,
+                    subSkills:allSubSkillsValues()
+                };
+            };
+            this.replaceValues = (toVoid:boolean):void => {
+                name.value = (toVoid)?'':this.cardEditing.Name;
+                description.value = (toVoid)?'':this.cardEditing.Description;
+                subContainer.innerHTML = '';
+                allSubSkills = [];
+                if (toVoid) addSubSkill(undefined);
+                else this.cardEditing.SubSkills.forEach(subSkill => addSubSkill(subSkill));
+            };
+            this.saveButton = document.getElementById('SSkill-save') as HTMLElement;
+            this.cancelButtons = document.querySelectorAll('.SSkill-cancel');
+            this.addButton = document.getElementById('add-card-sskill') as HTMLElement;
         }
     }
 
@@ -913,7 +1006,7 @@ class Card
             button.appendChild(i);
         });
         if (type != 'HSkill') {
-            this.buttonsContainer.classList.add('card-header', 'bg-white', 'position-relative');
+            this.buttonsContainer.classList.add('card-header', 'bg-white', 'position-relative', 'p-0');
             this.buttonsContainer.style.zIndex = '1';
             let d = document.createElement('DIV');
             d.classList.add('d-flex', 'justify-content-end');
@@ -1230,6 +1323,10 @@ class SSkill extends Card
     private name:string;
     private description:string;
     private subSkills:{name:string,value:number}[];
+    private nameContainer:HTMLElement = createElement('H4',['d-inline-block', 'fs-5', 'me-3', 'mb-0'],undefined,undefined,undefined);
+    private value:HTMLElement = createElement('DIV',['progress-bar'],[{att:'role',value:'progressbar'},{att:'style',value:'width: 0%;'},{att:'aria-valuenow',value:'0'},{att:'aria-valuemin',value:'0'},{att:'aria-valuemax',value:'100'}],undefined,undefined);
+    private subSkillsContainter:HTMLElement = createElement('DIV',['accordion-body', 'pt-0'],undefined,undefined,undefined);
+    private descriptionContainer:HTMLElement = createElement('P',undefined,[{att:'style',value:'font-size: .85em;'}],undefined,undefined);
 
     public constructor(object:{name:string,description:string,subSkills:{name:string,value:number}[]},container:CardsContainer,id:number)
     {
@@ -1237,6 +1334,69 @@ class SSkill extends Card
         this.name = object.name;
         this.description = object.description;
         this.subSkills = object.subSkills;
+        this.createElement();
+        this.refreshContent();
+    }
+
+    private createElement():void
+    {
+        let _value:HTMLElement = createElement('DIV',['progress'],[{att:'style',value:'flex-grow: 1;'}],undefined,[this.value]);
+        let head:HTMLElement = createElement('LI',['list-group-item', 'd-flex', 'align-items-center'],[{att:'style',value:'flex-grow: 0;'}],undefined,[this.nameContainer,_value]);
+        let _subSkillContainer:HTMLElement = createElement('DIV',['accordion-collapse', 'collapse'],[{att:'id',value:`collapse-${this.id}`}],undefined,[this.subSkillsContainter]);
+        let _subSkillButton:HTMLElement = createElement('BUTTON',['accordion-button', 'collapsed', 'p-0', 'm-0', 'w-100', 'h1', 'bg-white', 'shadow-none'],[{att:'type',value:'button'},{att:'data-bs-toggle',value:'collapse'},{att:'data-bs-target',value:`#collapse-${this.id}`},{att:'aria-expanded',value:'false'},{att:'aria-controls',value:`collapse-${this.id}`}],undefined,undefined);
+        let __subSkillContainer:HTMLElement = createElement('DIV',['accordion-item'],undefined,undefined,[_subSkillButton,_subSkillContainer]);
+        let ___subSkillContainer:HTMLElement = createElement('LI',['list-group-item', 'accordion', 'accordion-flush', 'p-0'],[{att:'style',value:'flex-grow: 0;'}],undefined,[__subSkillContainer]);
+        let _description:HTMLElement = createElement('LI',['list-group-item', 'text-muted'],[{att:'style',value:'flex-grow: 1;'}],undefined,[this.descriptionContainer]);
+        let body:HTMLElement = createElement('UL',['list-group', 'list-group-flush', 'd-flex', 'flex-column', 'h-100'],undefined,undefined,[head,___subSkillContainer,_description]);
+        let card:HTMLElement = createElement('DIV',['card', 'h-100', 'overflow-hidden', 'shadow-sm'],undefined,undefined,[this.buttonsContainer,body]);
+        this.element.push(card);
+    }
+
+    public refreshContent():void
+    {
+        this.nameContainer.innerText = this.name;
+        let valueSum:number = 0;
+        this.subSkillsContainter.innerHTML = '';
+        this.subSkills.forEach(skill => {
+            valueSum += skill.value;
+            let value:HTMLElement = createElement('DIV',['progress-bar'],[{att:'role',value:'progressbar'},{att:'style',value:`width: ${skill.value}%;`},{att:'aria-valuenow',value:`${skill.value}`},{att:'aria-valuemin',value:'0'},{att:'aria-valuemax',value:'100'}],undefined,undefined);
+            let _value:HTMLElement = createElement('DIV',['progress'],[{att:'style',value:'flex-grow: 1; height: 1px;'}],undefined,[value]);
+            let name:HTMLElement = createElement('H5',['d-inline-block', 'fs-6', 'm-0', 'me-3'],undefined,undefined,undefined);
+            name.innerText = skill.name;
+            let valueOverview:HTMLElement = createElement('P',['d-inline-block', 'fs-6', 'm-0', 'ms-3'],undefined,undefined,undefined);
+            valueOverview.innerText = `${skill.value}%`;
+            let container:HTMLElement = createElement('DIV',['d-flex', 'align-items-center'],undefined,this.subSkillsContainter,[name,_value,valueOverview]);
+        });
+        let valueMid:number = Math.trunc(valueSum / this.subSkills.length);
+        this.value.style.width = `${valueMid}%`;
+        this.value.setAttribute('aria-valuenow',valueMid.toString());
+        this.value.innerText = `${valueMid}%`;
+        this.descriptionContainer.innerHTML = this.description;
+    }
+
+    get Name():string
+    {
+        return this.name;
+    }
+    set Name(newName:string)
+    {
+        this.name = newName;
+    }
+    get Description():string
+    {
+        return this.description;
+    }
+    set Description(newDescription:string)
+    {
+        this.description = newDescription;
+    }
+    get SubSkills():{name:string,value:number}[]
+    {
+        return this.subSkills;
+    }
+    set SubSkills(newSubSkills:{name:string,value:number}[])
+    {
+        this.subSkills = newSubSkills;
     }
 }
 

@@ -272,193 +272,8 @@
             </div>
 
             <div class="container-fluid mt-3">
-                <h3 class="mb-4"><i>Soft skills</i><i class="fa-solid fa-circle-plus btn text-warning" id="add-card-education" data-bs-toggle="modal" data-bs-target="#SSkill-modal"></i></h3>
+                <h3 class="mb-4"><i>Soft skills</i><i class="fa-solid fa-circle-plus btn text-warning d-none" id="add-card-sskill" data-bs-toggle="modal" data-bs-target="#SSkill-modal"></i></h3>
                 <div class="row row-cols-1 row-cols-md-2 g-4" id="SSkillsSectionContainer">
-
-                    <div class="col px-sm-4" style="padding-left: 0.75rem; padding-right: 0.75rem;">
-                        <div class="card h-100">
-                            <div class="card-header bg-white py-0">
-                                <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn text-warning" title="Mover arriba">
-                                        <i class="fa-solid fa-circle-chevron-up"></i>
-                                    </button>
-                                    <button type="button" class="btn text-warning" title="Mover abajo">
-                                        <i class="fa-solid fa-circle-chevron-down"></i>
-                                    </button>
-                                    <button type="button" class="btn text-warning d-none d-sm-block" title="Arrastrar">
-                                        <i class="fa-solid fa-up-down-left-right"></i>
-                                    </button>
-                                    <button type="button" class="btn text-warning" title="Editar">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button type="button" class="btn text-danger" title="Eliminar">
-                                        <i class="fa-solid fa-circle-xmark"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <ul class="list-group list-group-flush shadow-sm d-flex flex-column h-100">
-                                <li class="list-group-item d-flex align-items-center" style="flex-grow: 0;">
-                                    <h4 class="d-inline-block fs-5 me-3 mb-0">Eficacia y eficiencia</h4>
-                                    <div class="progress" style="flex-grow: 1;">
-                                        <div class="progress-bar" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">70%</div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item accordion accordion-flush p-0" style="flex-grow: 0;">
-                                    <div class="accordion-item">
-                                        <button class="accordion-button collapsed p-0 m-0 w-100 h1 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="false" aria-controls="collapse-1">
-                                        </button>
-                                        <div id="collapse-1" class="accordion-collapse collapse">
-                                        <div class="accordion-body pt-0">
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Creatividad</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">75%</p>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Capacidad</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">65%</p>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Concentración</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">55%</p>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Velocidad</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">65%</p>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Adaptación</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">70%</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item text-muted" style="flex-grow: 1;">
-                                    <p style="font-size: .85em;">
-                                        Cuando me pongo a pensar y planear el <i>cómo</i> de la realización de un proyecto (con el suficiente tiempo) puedo plantear soluciones por lo general satisfactorias y mínimamente estéticas. A su vez, durante la ejecución, suelo pensar constantemente, y en ocaciones me surgen ideas que pueden transformarse en mejores soluciones o complicaciones generando dudas y pérdidas de tiempo, más aún cuando las necesidades del proyecto implican la adaptación a un nuevo lenguaje o <i>framework</i>.
-                                    </p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="col px-sm-4" style="padding-left: 0.75rem; padding-right: 0.75rem;">
-                        <div class="card h-100 border-0">
-                            <ul class="list-group shadow-sm d-flex flex-column h-100">
-                                <li class="list-group-item d-flex align-items-center" style="flex-grow: 0;">
-                                    <h4 class="d-inline-block fs-5 me-3 mb-0">Trabajo en Equipo</h4>
-                                    <div class="progress" style="flex-grow: 1;">
-                                        <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">65%</div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item accordion accordion-flush p-0" style="flex-grow: 0;">
-                                    <div class="accordion-item">
-                                        <button class="accordion-button collapsed p-0 m-0 w-100 h1 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
-                                        </button>
-                                        <div id="collapse-2" class="accordion-collapse collapse">
-                                        <div class="accordion-body pt-0">
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Predisposicion</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">50%</p>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Integración</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">70%</p>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Comunicación</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">75%</p>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Lidersazgo</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">65%</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item text-muted" style="flex-grow: 1;">
-                                    <p style="font-size: .85em;">
-                                        En la mayoría de las ocaciónes me hé mostrado más comodo con el trabajo individual, pero en los contextos de necesidad de integrar un equipo he demostrado ser capaz de adaptarme, comunicarme, plantear ideas e iniciativas, y hasta liderar (si mis conocimientos son afines al tema a desarrollar).    
-                                    </p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="col px-sm-4" style="padding-left: 0.75rem; padding-right: 0.75rem;">
-                        <div class="card h-100 border-0">
-                            <ul class="list-group shadow-sm">
-                                <li class="list-group-item d-flex align-items-center">
-                                    <h4 class="d-inline-block fs-5 me-3 mb-0">Inglés (idioma)</h4>
-                                    <div class="progress" style="flex-grow: 1;">
-                                        <div class="progress-bar" role="progressbar" style="width: 45%;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">45%</div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item accordion accordion-flush p-0">
-                                    <div class="accordion-item">
-                                        <button class="accordion-button collapsed p-0 m-0 w-100 h1 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                                        </button>
-                                        <div id="collapse-3" class="accordion-collapse collapse">
-                                        <div class="accordion-body pt-0">
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Escritura</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">50%</p>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Lectura</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">65%</p>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <h5 class="d-inline-block fs-6 m-0 me-3">Comunicacion Oral</h5>
-                                                <div class="progress" style="flex-grow: 1; height: 1px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p class="d-inline-block fs-6 m-0 ms-3">20%</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item text-muted">
-                                    <p style="font-size: .85em;">
-                                        Puedo leer, interpretar y escribir, pero carezco de la capacidad de entender las palabras de alguien que no hable lento y pausado, y cuento con una pronunciación básica.
-                                    </p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    
                 </div>
             </div>
         </section>
@@ -744,25 +559,9 @@
                         <label class="form-label" for="SSkill-sub-skills"><i>Sub-skills</i>:</label>
                         <div class="mb-3" id="SSkill-sub-skills">
                             <div class="m-2 row g-2 rounded bg-light shadow-sm" id="SSkill-sub-skill1" style="font-size: .74em;">
-                                <div class="col-sm-4">
-                                    <label for="sub-skill-name1" class="mb-1 form-label">Nombre de <i>sub-skill</i>:</label>
-                                    <input class="form-control form-control-sm" id="sub-skill-name1" type="text">
-                                </div>
-                                <div class="col-sm-8">
-                                    <label for="sub-skill-percent1" class="form-label mb-1">Porcentaje de <i>sub-skill</i:></label>
-                                    <div class="input-group" style="font-size: 1em; height: 31px;">
-                                        <span class="input-group-text p-0 px-2">
-                                            75%
-                                        </span>
-                                        <div class="d-flex align-items-center p-0 px-2 input-group-item border bg-white" style="flex-grow: 1;">
-                                            <input type="range" class="form-range" min="0" max="100" id="sub-skill-percent1">
-                                        </div>
-                                        <button class="btn border p-0 px-2 text-muted bg-white" type="button" id="button-addon1"><i class="fa-solid fa-xmark" title="Eliminar Sub-skill"></i></button>     
-                                    </div>
-                                </div>
                             </div>
-                            <div class="text-end mt-2"><button class="btn" style="background-color: #ddd559; font-size: .75em;">Agregar sub-skill</button></div>
                         </div>
+                        <div class="text-end mt-2"><button class="btn" aria-label="Agregar sub skill" id="addSubSkill" style="background-color: #ddd559; font-size: .75em;">Agregar sub-skill</button></div>
                         <div class="mb-1">
                             <label class="form-label" for="SSkill-general">Información general:</label>
                             <textarea class="form-control form-control-sm" type="text" id="SSkill-general"></textarea>
@@ -901,9 +700,6 @@
             </div>
         </div>
     </div>
-    
-    <div class="position-absolute bg-white" id="itemDragging" style="height: 40px; width: 80px; z-index: 9000;"></div>
-
     <script src="objects-scripts.js"></script>
     <!-- Bootstrap JS -->
     <script src="dist/bootstrap/js/bootstrap.js"></script>
