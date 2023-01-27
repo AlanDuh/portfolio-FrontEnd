@@ -32,3 +32,14 @@ h1,h2,h3,h4,h5,h6 {
 [draggable='true'] {
     cursor: grab;
 }
+
+section {
+    position: relative;
+}
+
+.extra {
+    position: absolute;
+    height: calc(100% + 50px);
+    top: -50px;
+    z-index: -1;
+}

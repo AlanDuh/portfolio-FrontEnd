@@ -103,9 +103,9 @@ class OwnerInfo {
                         break;
                 }
                 if (input.value) {
-                    this.bannerDraft.push(new CarouselImage(button.getAttribute('fileType'), src, this.bannerDraft.length, this));
+                    this.bannerDraft.push(new CarouselImage(button.getAttribute('fileType'), src, this.bannerDraft.length, () => this.bannerDraft, () => this.thContainer, (newContainer) => { this.bannerDraft = newContainer; }));
                 }
-                this.refreshTC();
+                this.bannerDraft[0].refreshTC();
             });
         });
         this.photoEditerFile.addEventListener('input', () => {
@@ -179,14 +179,6 @@ class OwnerInfo {
             cont.innerHTML = this.description;
         });
     }
-    refreshTC() {
-        this.thContainer.innerHTML = '';
-        let container = document.createDocumentFragment();
-        this.bannerDraft.forEach((image) => {
-            image.addThumbnail(container);
-        });
-        this.thContainer.appendChild(container);
-    }
     saveChanges() {
         this.banner = this.bannerDraft;
         this.photo = this.photoDraft;
@@ -202,12 +194,7 @@ class OwnerInfo {
         this.photoDraft = this.photo;
         this.titleDraft = this.title;
         this.descriptionDraft = this.description;
-        this.refreshTC();
-    }
-    complementMovement(from, dir) {
-        this.bannerDraft.find((banner) => (banner.Index == from.Index && banner != from)).move(dir, false);
-        this.bannerDraft.sort((a, b) => { return a.Index - b.Index; });
-        this.refreshTC();
+        this.bannerDraft[0].refreshTC();
     }
     get BannerDraftLenght() {
         return this.bannerDraft.length;
@@ -220,15 +207,25 @@ class OwnerInfo {
     }
 }
 class CarouselImage {
-    constructor(type, src, index, container) {
+    constructor(type, src, index, container, shelf, editContainer) {
         this.moveForwardButton = this.createButton('fa-chevron-left', 'Mover a la izquierda', 'forward');
         this.moveBackwardButton = this.createButton('fa-chevron-right', 'Mover a la derecha', 'backward');
         this.deleteButton = this.createButton('fa-xmark', 'Eliminar', 'delete');
         this.type = type;
         this.src = src;
         this.index = index;
-        this.container = container;
+        this.container = () => container();
+        this.shelf = () => shelf();
+        this.editContainer = (newContainer) => editContainer(newContainer);
         this.thumbnail = this.createThumbnail();
+    }
+    refreshTC() {
+        this.shelf().innerHTML = '';
+        let container = document.createDocumentFragment();
+        this.container().forEach((image) => {
+            image.addThumbnail(container);
+        });
+        this.shelf().appendChild(container);
     }
     createButton(figure, title, type) {
         let button = document.createElement('I');
@@ -251,24 +248,30 @@ class CarouselImage {
                 if (this.index > 0) {
                     this.index--;
                     if (needComplement)
-                        this.container.complementMovement(this, 'backward');
+                        this.complementMovement(this, 'backward');
                 }
                 break;
             case 'backward':
-                if (this.index < (this.container.BannerDraftLenght - 1)) {
+                if (this.index < (this.container().length - 1)) {
                     this.index++;
                     if (needComplement)
-                        this.container.complementMovement(this, 'forward');
+                        this.complementMovement(this, 'forward');
                 }
                 break;
         }
     }
+    complementMovement(from, dir) {
+        this.container().find((banner) => (banner.Index == from.Index && banner != from)).move(dir, false);
+        this.container().sort((a, b) => { return a.Index - b.Index; });
+        this.refreshTC();
+    }
     deleteSelf() {
-        this.container.BannerDraft = this.container.BannerDraft.filter(banner => banner != this);
-        for (let i in this.container.BannerDraft) {
-            this.container.BannerDraft[i].Index = parseInt(i);
+        let newContent = this.container().filter(banner => banner != this);
+        this.editContainer(newContent);
+        for (let i in this.container()) {
+            this.container()[i].Index = parseInt(i);
         }
-        this.container.refreshTC();
+        this.refreshTC();
     }
     createThumbnail() {
         let container = document.createElement('DIV');
@@ -343,6 +346,9 @@ class CardsContainer {
                             break;
                         case 'SSkill':
                             $('#SSkill-modal').modal('hide');
+                            break;
+                        case 'projects':
+                            $('#Project-modal').modal('hide');
                             break;
                     }
                 }
@@ -744,6 +750,86 @@ class CardsContainer {
             this.saveButton = document.getElementById('SSkill-save');
             this.cancelButtons = document.querySelectorAll('.SSkill-cancel');
             this.addButton = document.getElementById('add-card-sskill');
+        }
+        else if (this.containerType == 'projects') {
+            const name = document.getElementById('project-name');
+            const description = document.getElementById('project-description');
+            const date = document.getElementById('project-date');
+            const pageLink = document.getElementById('project-link');
+            const pageGitHub = document.getElementById('project-github');
+            const imgFile = document.getElementById('project-img-file');
+            const imgLink = document.getElementById('project-img-link');
+            const addImage = document.getElementById('project-img-adder');
+            const thShelf = document.getElementById('project-img-thumbnails');
+            let thumbnails = [];
+            let idAble = 0;
+            imgFile.addEventListener('input', () => imgLink.value = URL.createObjectURL(imgFile.files[0]));
+            addImage.addEventListener('click', () => {
+                addThumbnail(imgLink.value);
+                idAble++;
+                thumbnails[0].refreshTC();
+            });
+            function addThumbnail(value) {
+                thumbnails.push(new CarouselImage('link', value, idAble, () => thumbnails, () => thShelf, (newContainer) => thumbnails = newContainer));
+            }
+            function getImages() {
+                let imgs = [];
+                thumbnails.forEach(img => imgs.push(img.Src));
+                return imgs;
+            }
+            this.save = () => {
+                if (this.verify()) {
+                    this.cardEditing.Name = name.value;
+                    this.cardEditing.Description = description.value;
+                    this.cardEditing.Date = date.value;
+                    this.cardEditing.Links = {
+                        page: pageLink.value,
+                        gitHub: pageGitHub.value
+                    };
+                    this.cardEditing.Images = getImages();
+                    $('#Project-modal').modal('hide');
+                    this.cardEditing.refreshContent();
+                    this.cancel();
+                }
+                else {
+                    this.hasFailed = true;
+                    showAlert('danger', 'Rellene todas las entradas requeridas');
+                }
+            };
+            this.required = {
+                simple: [name, description, date, pageLink, pageGitHub],
+                composed: undefined
+            };
+            this.allInputs = [name, description, date, pageLink, pageGitHub];
+            this.replaceValues = (toVoid) => {
+                name.value = (toVoid) ? '' : this.cardEditing.Name;
+                description.value = (toVoid) ? '' : this.cardEditing.Description;
+                date.value = (toVoid) ? '' : this.cardEditing.Date;
+                pageLink.value = (toVoid) ? '' : this.cardEditing.Links.page;
+                pageGitHub.value = (toVoid) ? '' : this.cardEditing.Links.gitHub;
+                thumbnails = [];
+                thShelf.innerHTML = '';
+                if (!toVoid) {
+                    this.cardEditing.Images.forEach(img => addThumbnail(img));
+                    thumbnails[0].refreshTC();
+                }
+                ;
+            };
+            this.createCard = () => {
+                return {
+                    name: name.value,
+                    description: description.value,
+                    date: date.value,
+                    images: getImages(),
+                    links: {
+                        page: pageLink.value,
+                        gitHub: pageGitHub.value
+                    }
+                };
+            };
+            this.saveButton = document.getElementById('project-save');
+            this.cancelButtons = document.querySelectorAll('.project-cancel');
+            this.addButton = document.getElementById('add-card-projects');
         }
     }
     verify() {
@@ -1261,10 +1347,104 @@ class SSkill extends Card {
 class Project extends Card {
     constructor(object, container, id) {
         super(container, 'Project', id);
+        this.nameContainer = createElement('H3', ['card-title', 'm-0', 'fs-5'], undefined, undefined, undefined);
+        this.descriptionContainer = createElement('P', ['card-text', 'text-muted'], [{ att: 'style', value: 'font-size: .85em;' }], undefined, undefined);
+        this.dateContainer = createElement('P', ['mb-2'], [{ att: 'style', value: 'color: #555; font-size: .85em;' }], undefined, undefined);
+        this.pageLink = createElement('A', ['btn', 'btn-primary', 'disabled', 'p-0', 'px-2', 'mx-2'], undefined, undefined, undefined);
+        this.gitHubLink = createElement('A', ['btn', 'btn-outline-dark', 'p-0', 'px-1'], [{ att: 'title', value: 'GitHub' }], undefined, undefined);
+        this.imagesContainer = createElement('DIV', ['col', 'col-12', 'col-sm-4', 'col-md-12', 'col-lg-4', 'shadow-sm', 'p-0'], [{ att: 'style', value: 'height: 300px;' }], undefined, undefined);
         this.name = object.name;
         this.description = object.description;
         this.date = object.date;
         this.images = object.images;
+        this.links = object.links;
+        this.createElement();
+        this.refreshContent();
+    }
+    createElement() {
+        this.gitHubLink.innerHTML = '<i class="fa-brands fa-github"></i>';
+        this.pageLink.innerText = 'Ir a la página';
+        let _dateContainer = createElement('DIV', ['w-100'], undefined, undefined, [this.dateContainer]);
+        let hr1 = createElement('HR', ['d-block', 'w-100', 'my-1', 'ms-2', 'ms-sm-0', 'ms-md-2', 'ms-lg-0'], undefined, undefined, undefined);
+        let footer = createElement('DIV', ['container-fluid', 'd-flex', 'flex-row', 'flex-wrap', 'justify-content-end', 'ps-0', 'pe-2'], undefined, undefined, [hr1, _dateContainer, this.pageLink, this.gitHubLink]);
+        let hr0 = createElement('HR', ['d-block', 'me-2', 'ms-2', 'ms-sm-0', 'ms-md-2', 'ms-lg-0', 'my-1'], undefined, undefined, undefined);
+        let head = createElement('DIV', undefined, undefined, undefined, [this.nameContainer, hr0, this.descriptionContainer]);
+        let body = createElement('DIV', ['col', 'col-12', 'col-sm-8', 'col-md-12', 'col-lg-8', 'text-center', 'text-sm-start', 'text-md-center', 'text-lg-start', 'd-flex', 'flex-column', 'py-2', 'justify-content-between'], undefined, undefined, [head, footer]);
+        let _body = createElement('DIV', ['row', 'w-100', 'm-0'], undefined, undefined, [this.imagesContainer, body]);
+        let __body = createElement('DIV', ['card', 'h-100', 'shadow-sm', 'overflow-hidden'], undefined, undefined, [this.buttonsContainer, _body]);
+        this.element.push(__body);
+    }
+    refreshContent() {
+        this.nameContainer.innerText = this.name;
+        this.descriptionContainer.innerHTML = this.description;
+        this.pageLink.href = this.links.page;
+        this.gitHubLink.href = this.links.gitHub;
+        this.dateContainer.innerHTML = `Fecha de la última versión: <span class="text-muted">${this.generateUTCDate(new Date(this.date))}</span>`;
+        this.imagesContainer.innerHTML = '';
+        if (this.images.length == 1) {
+            let newImage = createElement('IMG', ['h-100', 'w-100'], [{ att: 'style', value: 'object-fit: cover;' }], this.imagesContainer, undefined);
+            newImage.src = this.images[0];
+        }
+        else if (this.images.length > 1) {
+            let container = createElement('DIV', ['carousel', 'slide', 'w-100', 'h-100'], [{ att: 'data-bs-ride', value: 'true' }, { att: 'id', value: `project-${this.Index}-images` }], this.imagesContainer, undefined);
+            let indicators = createElement('DIV', ['carousel-indicators'], undefined, container, undefined);
+            let images = createElement('DIV', ['carousel-inner', 'w-100', 'h-100'], undefined, container, undefined);
+            let idAble = 0;
+            this.images.forEach(image => {
+                let img = createElement('IMG', ['d-block', 'w-100', 'h-100'], [{ att: 'style', value: 'object-fit: cover;' }, { att: 'alt', value: `"${this.name}" project - image ${idAble}` }], undefined, undefined);
+                img.src = image;
+                let imgCont = createElement('DIV', (idAble == 0) ? ['carousel-item', 'active', 'w-100', 'h-100'] : ['carousel-item', 'w-100', 'h-100'], undefined, images, [img]);
+                let button = createElement('BUTTON', (idAble == 0) ? ['active'] : undefined, (idAble == 0) ? [{ att: 'type', value: 'button' }, { att: 'data-bs-target', value: `#project-${this.Index}-images` }, { att: 'data-bs-slide-to', value: `${idAble}` }, { att: 'aria-current', value: 'true' }, { att: 'aria-label', value: `Image ${idAble + 1}` }] : [{ att: 'type', value: 'button' }, { att: 'data-bs-target', value: `#project-${this.Index}-images` }, { att: 'data-bs-slide-to', value: `${idAble}` }, { att: 'aria-label', value: `Image ${idAble + 1}` }], indicators, undefined);
+                idAble++;
+            });
+            let movePrevious = createElement('BUTTON', ['carousel-control-prev'], [{ att: 'type', value: 'button' }, { att: 'data-bs-target', value: `#project-${this.Index}-images` }, { att: 'data-bs-slide', value: 'prev' }], container, undefined);
+            createElement('SPAN', ['carousel-control-prev-icon'], [{ att: 'aria-hidden', value: 'true' }], movePrevious, undefined);
+            let prevLabel = createElement('SPAN', ['visually-hidden'], undefined, movePrevious, undefined);
+            prevLabel.innerText = 'Previous';
+            let moveNext = createElement('BUTTON', ['carousel-control-next'], [{ att: 'type', value: 'button' }, { att: 'data-bs-target', value: `#project-${this.Index}-images` }, { att: 'data-bs-slide', value: 'next' }], container, undefined);
+            createElement('SPAN', ['carousel-control-next-icon'], [{ att: 'aria-hidden', value: 'true' }], moveNext, undefined);
+            let nextLabel = createElement('SPAN', ['visually-hidden'], undefined, moveNext, undefined);
+            nextLabel.innerText = 'Next';
+        }
+    }
+    generateUTCDate(date) {
+        let response = '';
+        response += date.getUTCDate() + '/';
+        let month = date.getUTCMonth() + 1;
+        if (month < 10)
+            month = '0' + month.toString();
+        response += month + '/' + date.getUTCFullYear();
+        return response;
+    }
+    get Name() {
+        return this.name;
+    }
+    set Name(newName) {
+        this.name = newName;
+    }
+    get Description() {
+        return this.description;
+    }
+    set Description(newDescription) {
+        this.description = newDescription;
+    }
+    get Date() {
+        return this.date;
+    }
+    set Date(newDate) {
+        this.date = newDate;
+    }
+    get Links() {
+        return this.links;
+    }
+    set Links(newLinks) {
+        this.links = newLinks;
+    }
+    get Images() {
+        return this.images;
+    }
+    set Images(newImages) {
+        this.images = newImages;
     }
 }
 let ownerInfo;
