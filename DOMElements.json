@@ -157,16 +157,11 @@
             "name":"Portfolio",
             "description":"Este portfolio",
             "date":"2023-01-23",
-            "images":[
-                {
-                    "type":"file",
-                    "src":"imgs/porfolio.png"
-                },
-                {
-                    "type":"file",
-                    "src":"imgs/porfolio2.png"
-                }
-            ]
+            "images":["imgs/porfolio.png","imgs/porfolio2.png"],
+            "links":{
+                "page":"/",
+                "gitHub":"https://github.com/AlanDuh/portfolio-FrontEnd"
+            }
         }
     ]
 }
