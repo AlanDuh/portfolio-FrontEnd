@@ -1,6 +1,9 @@
 {
     "ownerInfo":{
-        "banner":["imgs/LaBombonera.jpg"],
+        "banner":[{
+            "Src":"imgs/LaBombonera.jpg",
+            "Type":"link"    
+        }],
         "photo":null,
         "title":"Full Stack Developer Jr",
         "description":"Mi nombre es Alan Duhalde, programador en formación, instruído bajo la tutoría ofrecida por el 'Argentina Programa', aún sin especialización, pero con capacidades de diseñar y programar FrontEnd, de manera como aquí se contempla."
