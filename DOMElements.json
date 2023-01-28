@@ -1,6 +1,6 @@
 {
     "ownerInfo":{
-        "banner":[],
+        "banner":["imgs/LaBombonera.jpg"],
         "photo":null,
         "title":"Full Stack Developer Jr",
         "description":"Mi nombre es Alan Duhalde, programador en formación, instruído bajo la tutoría ofrecida por el 'Argentina Programa', aún sin especialización, pero con capacidades de diseñar y programar FrontEnd, de manera como aquí se contempla."
@@ -155,9 +155,9 @@
     "projects":[
         {
             "name":"Portfolio",
-            "description":"Este portfolio",
+            "description":"Primera versión <i>'completa'</i> de mi <b>Portfolio personal</b>, realizado mediante la utilización de lenguaje HTML, CSS, Bootstrap, JavaScript y TypeSctript, para ser presentado como entrega de la <i>Tarea desafío del módulo 2</i>. Al <i>iniciar sesión</i> se abre una interfaz que busca simular la edición de datos en tiempo real, que permite: eliminar, crear nuevas cartas para cada sección, editar las existentes, adjuntar archivos locales, y moverlas (con botones o arrastrando).",
             "date":"2023-01-27",
-            "images":["imgs/porfolio.png","imgs/porfolio2.png"],
+            "images":["imgs/portfolio1.png","imgs/portfolio2.png","imgs/portfolio3.png","imgs/portfolio4.png"],
             "links":{
                 "page":"/",
                 "gitHub":"https://github.com/AlanDuh/portfolio-FrontEnd"
