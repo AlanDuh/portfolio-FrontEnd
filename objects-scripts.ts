@@ -1326,11 +1326,11 @@ class HSkill extends Card
         src:string
     };
     private nameContainer:HTMLElement = createElement('H4',['invisible', 'position-absolute'],[{att:'style',value:'z-index: 0;'}],undefined,undefined);
-    private positiveP:HTMLElement = createElement('P',['m-0'],[{att:'style',value:'color: #555;'}],undefined,undefined);
-    private negativeP:HTMLElement = createElement('P',['m-0','mt-3','mt-md-0'],[{att:'style',value:'color: #555;'}],undefined,undefined);
+    private positiveP:HTMLElement = createElement('P',['m-0'],[{att:'style',value:'color: #fff;'}],undefined,undefined);
+    private negativeP:HTMLElement = createElement('P',['m-0','mt-3','mt-md-0'],[{att:'style',value:'color: #fff;'}],undefined,undefined);
     private bgContainer:HTMLElement = createElement('DIV',['position-absolute', 'h-100', 'w-100', 'top-0', 'start-0'],undefined,undefined,undefined);
-    private valuePositive:HTMLElement = createElement('DIV',['progress-bar', 'bg-success', 'position-relative', 'opacity-25'],[{att:'role',value:'progressbar'},{att:'aria-label',value:'positive'},{att:'style',value:'width: 75%; z-index: 1;'},{att:'aria-valuenow',value:'75'},{att:'aria-valuemin',value:'0'},{att:'aria-valuemax',value:'100'}],undefined,undefined);
-    private valueNegative:HTMLElement = createElement('DIV',['progress-bar', 'bg-danger', 'position-relative', 'opacity-25'],[{att:'role',value:'progressbar'},{att:'aria-label',value:'negative'},{att:'style',value:'width: 25%; z-index: 1;'},{att:'aria-valuenow',value:'25'},{att:'aria-valuemin',value:'0'},{att:'aria-valuemax',value:'100'}],undefined,undefined);
+    private valuePositive:HTMLElement = createElement('DIV',['progress-bar', 'bg-success', 'position-relative', 'opacity-50'],[{att:'role',value:'progressbar'},{att:'aria-label',value:'positive'},{att:'style',value:'width: 75%; z-index: 1;'},{att:'aria-valuenow',value:'75'},{att:'aria-valuemin',value:'0'},{att:'aria-valuemax',value:'100'}],undefined,undefined);
+    private valueNegative:HTMLElement = createElement('DIV',['progress-bar', 'bg-danger', 'position-relative', 'opacity-50'],[{att:'role',value:'progressbar'},{att:'aria-label',value:'negative'},{att:'style',value:'width: 25%; z-index: 1;'},{att:'aria-valuenow',value:'25'},{att:'aria-valuemin',value:'0'},{att:'aria-valuemax',value:'100'}],undefined,undefined);
 
     public constructor(object:{name:string,value:number,points:{positives:string[],negatives:string[]},background:{type:string,animation:boolean,src:string}},container:CardsContainer,id:number)
     {
@@ -1363,7 +1363,7 @@ class HSkill extends Card
         this.valuePositive.style.width = `${this.value}%`;
         this.valueNegative.setAttribute('aria-valuenow',(100 - this.value).toString());
         this.valueNegative.style.width = `${100 - this.value}%`;
-        this.bgContainer.innerHTML = `<img class="h-100 w-100" src="${this.background.src}" alt="${this.name} - Hard Skill Background" style="object-fit: cover;">`;
+        this.bgContainer.innerHTML = `<img class="h-100 w-100 opacity-50" src="${this.background.src}" alt="${this.name} - Hard Skill Background" style="object-fit: cover;">`;
         this.positiveP.innerHTML = '';
         this.negativeP.innerHTML = '';
         this.points.positives.forEach(point => this.positiveP.innerHTML += `<i class="fa-solid fa-check text-success"></i> ${point}<br>`);
@@ -1496,7 +1496,7 @@ class Project extends Card
     private nameContainer:HTMLElement = createElement('H3',['card-title', 'm-0', 'fs-5'],undefined,undefined,undefined);
     private descriptionContainer:HTMLElement = createElement('P',['card-text', 'text-muted'],[{att:'style',value:'font-size: .85em;'}],undefined,undefined);
     private dateContainer:HTMLElement = createElement('P',['mb-2'],[{att:'style',value:'color: #555; font-size: .85em;'}],undefined,undefined);
-    private pageLink:HTMLAnchorElement = createElement('A',['btn', 'btn-primary', 'disabled', 'p-0', 'px-2', 'mx-2'],undefined,undefined,undefined) as HTMLAnchorElement;
+    private pageLink:HTMLAnchorElement = createElement('A',['btn', 'btn-primary', 'p-0', 'px-2', 'mx-2'],undefined,undefined,undefined) as HTMLAnchorElement;
     private gitHubLink:HTMLAnchorElement = createElement('A',['btn', 'btn-outline-dark', 'p-0', 'px-1'],[{att:'title',value:'GitHub'}],undefined,undefined) as HTMLAnchorElement;
     private imagesContainer:HTMLElement = createElement('DIV',['col', 'col-12', 'col-sm-4', 'col-md-12', 'col-lg-4', 'shadow-sm', 'p-0'],[{att:'style',value:'height: 300px;'}],undefined,undefined);
 

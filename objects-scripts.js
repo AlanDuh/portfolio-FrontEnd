@@ -1222,11 +1222,11 @@ class HSkill extends Card {
     constructor(object, container, id) {
         super(container, 'HSkill', id);
         this.nameContainer = createElement('H4', ['invisible', 'position-absolute'], [{ att: 'style', value: 'z-index: 0;' }], undefined, undefined);
-        this.positiveP = createElement('P', ['m-0'], [{ att: 'style', value: 'color: #555;' }], undefined, undefined);
-        this.negativeP = createElement('P', ['m-0', 'mt-3', 'mt-md-0'], [{ att: 'style', value: 'color: #555;' }], undefined, undefined);
+        this.positiveP = createElement('P', ['m-0'], [{ att: 'style', value: 'color: #fff;' }], undefined, undefined);
+        this.negativeP = createElement('P', ['m-0', 'mt-3', 'mt-md-0'], [{ att: 'style', value: 'color: #fff;' }], undefined, undefined);
         this.bgContainer = createElement('DIV', ['position-absolute', 'h-100', 'w-100', 'top-0', 'start-0'], undefined, undefined, undefined);
-        this.valuePositive = createElement('DIV', ['progress-bar', 'bg-success', 'position-relative', 'opacity-25'], [{ att: 'role', value: 'progressbar' }, { att: 'aria-label', value: 'positive' }, { att: 'style', value: 'width: 75%; z-index: 1;' }, { att: 'aria-valuenow', value: '75' }, { att: 'aria-valuemin', value: '0' }, { att: 'aria-valuemax', value: '100' }], undefined, undefined);
-        this.valueNegative = createElement('DIV', ['progress-bar', 'bg-danger', 'position-relative', 'opacity-25'], [{ att: 'role', value: 'progressbar' }, { att: 'aria-label', value: 'negative' }, { att: 'style', value: 'width: 25%; z-index: 1;' }, { att: 'aria-valuenow', value: '25' }, { att: 'aria-valuemin', value: '0' }, { att: 'aria-valuemax', value: '100' }], undefined, undefined);
+        this.valuePositive = createElement('DIV', ['progress-bar', 'bg-success', 'position-relative', 'opacity-50'], [{ att: 'role', value: 'progressbar' }, { att: 'aria-label', value: 'positive' }, { att: 'style', value: 'width: 75%; z-index: 1;' }, { att: 'aria-valuenow', value: '75' }, { att: 'aria-valuemin', value: '0' }, { att: 'aria-valuemax', value: '100' }], undefined, undefined);
+        this.valueNegative = createElement('DIV', ['progress-bar', 'bg-danger', 'position-relative', 'opacity-50'], [{ att: 'role', value: 'progressbar' }, { att: 'aria-label', value: 'negative' }, { att: 'style', value: 'width: 25%; z-index: 1;' }, { att: 'aria-valuenow', value: '25' }, { att: 'aria-valuemin', value: '0' }, { att: 'aria-valuemax', value: '100' }], undefined, undefined);
         this.name = object.name;
         this.value = object.value;
         this.points = object.points;
@@ -1249,7 +1249,7 @@ class HSkill extends Card {
         this.valuePositive.style.width = `${this.value}%`;
         this.valueNegative.setAttribute('aria-valuenow', (100 - this.value).toString());
         this.valueNegative.style.width = `${100 - this.value}%`;
-        this.bgContainer.innerHTML = `<img class="h-100 w-100" src="${this.background.src}" alt="${this.name} - Hard Skill Background" style="object-fit: cover;">`;
+        this.bgContainer.innerHTML = `<img class="h-100 w-100 opacity-50" src="${this.background.src}" alt="${this.name} - Hard Skill Background" style="object-fit: cover;">`;
         this.positiveP.innerHTML = '';
         this.negativeP.innerHTML = '';
         this.points.positives.forEach(point => this.positiveP.innerHTML += `<i class="fa-solid fa-check text-success"></i> ${point}<br>`);
@@ -1350,7 +1350,7 @@ class Project extends Card {
         this.nameContainer = createElement('H3', ['card-title', 'm-0', 'fs-5'], undefined, undefined, undefined);
         this.descriptionContainer = createElement('P', ['card-text', 'text-muted'], [{ att: 'style', value: 'font-size: .85em;' }], undefined, undefined);
         this.dateContainer = createElement('P', ['mb-2'], [{ att: 'style', value: 'color: #555; font-size: .85em;' }], undefined, undefined);
-        this.pageLink = createElement('A', ['btn', 'btn-primary', 'disabled', 'p-0', 'px-2', 'mx-2'], undefined, undefined, undefined);
+        this.pageLink = createElement('A', ['btn', 'btn-primary', 'p-0', 'px-2', 'mx-2'], undefined, undefined, undefined);
         this.gitHubLink = createElement('A', ['btn', 'btn-outline-dark', 'p-0', 'px-1'], [{ att: 'title', value: 'GitHub' }], undefined, undefined);
         this.imagesContainer = createElement('DIV', ['col', 'col-12', 'col-sm-4', 'col-md-12', 'col-lg-4', 'shadow-sm', 'p-0'], [{ att: 'style', value: 'height: 300px;' }], undefined, undefined);
         this.name = object.name;
